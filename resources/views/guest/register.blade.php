@@ -1,5 +1,17 @@
 @extends('guest.layouts.main')
 @section('main-content')
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
@@ -18,7 +30,9 @@
                         <h4 class="mb-2">Adventure starts here 🚀</h4>
                         <p class="mb-4">Fill the forms below to create your account</p>
 
-                        <form id="register" class="mb-3" action="index.html">
+                        <form id="register" class="mb-3" action="{{ url('/register') }}" method="POST"
+                            enctype="multipart/form-data">
+                            @csrf
                             <div id="msg" class="alert alert-primary" style="display:none">
                             </div>
                             <div class="mb-3">
@@ -34,12 +48,13 @@
 
                             <div class="mb-3">
                                 <label for="dob" class="form-label">Date of Birth</label>
-                                <input class="form-control" name="dob" type="date" value="2021-06-18" id="dob">
+                                <input class="form-control" name="dob" type="date" id="dob" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="avatar" class="form-label">Profile Picture</label>
-                                <input name="avatar" class="form-control" type="file" id="avatar">
+                                <input name="avatar" class="form-control" type="file" id="avatar"
+                                    accept="image/jpg, image/JPG, image/jpeg, image/png, image/gif" required>
                             </div>
 
 
@@ -54,8 +69,8 @@
 
                             <div class="mb-3">
                                 <label for="type" class="form-label">I am a:</label>
-                                <select id="type" name="type" class="form-select">
-                                    <option>Select One Otion</option>
+                                <select id="type" name="role" class="form-select" required>
+                                    <option value selected disabled>Select One Otion</option>
                                     <option value="tourist">Tourist</option>
                                     <option value="guide">Guide</option>
                                 </select>
