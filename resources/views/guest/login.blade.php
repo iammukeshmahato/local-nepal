@@ -11,7 +11,7 @@
                     <div class="card-body">
                         {{-- Logo --}}
                         <div class="app-brand justify-content-center">
-                            <a href="index.html" class="app-brand-link gap-2">
+                            <a href="{{ url('/') }}" class="app-brand-link gap-2">
                                 <img src="{{ asset('assets/img/logo.png') }}" alt="Local Nepal">
                             </a>
                         </div>
@@ -20,9 +20,10 @@
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
                         <form class="mb-3" action="" method="POST">
+                            @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email or Username</label>
-                                <input type="text" class="form-control" id="email" name="email-username"
+                                <input type="text" class="form-control" id="email" name="email"
                                     placeholder="Enter your email or username" autofocus />
                             </div>
                             <div class="mb-3 form-password-toggle">
@@ -52,7 +53,7 @@
 
                         <p class="text-center">
                             <span>New on our platform?</span>
-                            <a href="">
+                            <a href="{{ url('/register') }}">
                                 <span>Create an account</span>
                             </a>
                         </p>
