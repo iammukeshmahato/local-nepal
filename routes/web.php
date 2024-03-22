@@ -11,7 +11,8 @@ Route::get('/register', function () {
     return view('guest.register');
 });
 
-Route::post('/register', [AuthController::class, 'store'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/', function () {
     return view('guest.index');

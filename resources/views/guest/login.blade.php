@@ -19,6 +19,12 @@
                         <h4 class="mb-2">Welcome to LocalNepal! 👋</h4>
                         <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
+                        @if (session()->has('loginError'))
+                            <div class="alert alert-danger" role="alert">
+                                {{ session()->get('loginError') }}
+                            </div>
+                        @endif
+
                         <form class="mb-3" action="" method="POST">
                             @csrf
                             <div class="mb-3">
