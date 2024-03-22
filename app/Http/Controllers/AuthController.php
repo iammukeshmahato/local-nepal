@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -51,7 +52,7 @@ class AuthController extends Controller
         $avatar->storeAs('public/profiles/', $avatarName);
 
         $otp = rand(100000, 999999);
-        User::create(array_merge($request->all(), ['avatar' => $avatarName, 'password' => bcrypt($request->password), 'otp' => $otp]));
+        $user = User::create(array_merge($request->all(), ['avatar' => $avatarName, 'password' => bcrypt($request->password), 'otp' => $otp]));
         // Mail::to($user->email)->send(new WelcomeEmail($user));
 
         $emailContent = ["email" => $request->email, 'otp' => $otp];
@@ -74,9 +75,7 @@ class AuthController extends Controller
 
         Mail::to($request->email)->send(new SendEmail($data));
 
-
-
-        return redirect('/verify-email');
+        return redirect('/verify-email' . '/' . base64_encode($user->id));
     }
 
     public function verify_email(Request $request, $id = null)
@@ -94,7 +93,11 @@ class AuthController extends Controller
                 $user->verified = 1;
                 $user->save();
                 session()->flash('emailVerified', 'Email verified successfully');
-                return redirect('/login');
+
+                Auth::login($user);
+
+                $url = "/$user->role/";
+                return redirect($url);
             } else {
                 $user->otp_count = $user->otp_count - 1;
                 $user->save();

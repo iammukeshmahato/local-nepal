@@ -30,7 +30,9 @@
 
                         <form id="verify" class="mb-3" method="POST" action="{{ url('/verify-email') }}">
                             @csrf
-                            <input name="user_id" value="{{ $user_id }}" type="hidden">
+                            @isset($user_id)
+                                <input name="user_id" value="{{ $user_id }}" type="hidden">
+                            @endisset
                             <div class="mb-3">
                                 <label for="code" class="form-label">Verification Code</label>
                                 <input type="number" class="form-control" id="code" name="otp"

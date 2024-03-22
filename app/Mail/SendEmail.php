@@ -37,7 +37,7 @@ class SendEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'guest.verify_email',
+            view: 'guest.mail.verify_email',
         );
     }
 
@@ -54,7 +54,7 @@ class SendEmail extends Mailable
     public function build()
     {
         return $this->subject('Verify your email')
-            ->view('guest.verify_email')
+            ->view('guest.mail.verify_email')
             ->with($this->data);
     }
 }
