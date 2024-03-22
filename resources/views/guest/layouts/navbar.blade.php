@@ -11,12 +11,17 @@
             <div class="navbar-nav me-auto">
             </div>
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="javascript:void(0)">Home</a>
-                <a class="nav-item nav-link" href="javascript:void(0)">About</a>
-                <a class="nav-item nav-link" href="javascript:void(0)">Contact</a>&nbsp;&nbsp;&nbsp;
-
-                <a href="{{ url('/login') }}"><button class="btn btn-outline-primary"
-                        type="button">Login/Register</button></a>
+                <a class="nav-item nav-link active" href="{{ url('/') }}">Home</a>
+                <a class="nav-item nav-link" href="{{ url('/') }}">About</a>
+                <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a>&nbsp;&nbsp;&nbsp;
+                @if (auth()->check())
+                    <a class="nav-item nav-link" href="{{ url('/') }}">{{ auth()->user()->role }}</a>
+                    <a href="{{ url('/logout') }}"><button class="btn btn-outline-primary"
+                            type="button">Logout</button></a>
+                @else
+                    <a href="{{ url('/login') }}"><button class="btn btn-outline-primary"
+                            type="button">Login/Register</button></a>
+                @endif
                 <div class="gtranslate_wrapper"></div>
                 <script>
                     window.gtranslateSettings = {

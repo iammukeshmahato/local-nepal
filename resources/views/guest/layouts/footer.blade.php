@@ -1,3 +1,4 @@
+<hr class="p-0 m-0">
 <footer>
     <div class="footer d-flex justify-content-between mx-5">
         <section class="social_media">
