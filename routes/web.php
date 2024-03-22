@@ -2,8 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\AdminAuth;
+use App\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/login', function () {
+    if (Auth::check()) {
+        return redirect(Auth::user()->role . "/dashboard"); // Or another route name
+    }
     return view('guest.login');
 });
 
@@ -20,4 +26,16 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/', function () {
     return view('guest.index');
+});
+
+
+// admin routes
+Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAuth::class]], function () {
+    Route::get('/', function () {
+        return redirect('admin/dashboard');
+    });
+
+    Route::get('/dashboard', function () {
+        dd('admin dashboard');
+    });
 });
