@@ -5,75 +5,7 @@
 @push('links')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-    <style>
-        .carousel-inner img {
-            height: calc(100vh - 56px);
-            object-fit: cover
-        }
-
-        .carousel-caption h3 {
-            font-size: 30px
-        }
-
-        .carousel-caption p {
-            font-size: 20px
-        }
-
-        .carousel-caption p,
-        h3,
-        .carousel-caption h1 {
-            text-shadow: 2px 2px 7px black;
-        }
-
-        .carousel-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-            z-index: 1;
-        }
-
-        .carousel-caption {
-            z-index: 2;
-        }
-
-        section {
-            padding: 4rem 0;
-            background: #fff;
-        }
-
-        .card {
-            overflow: hidden;
-        }
-
-        .card img {
-            height: 450px;
-            object-fit: cover;
-            opacity: 0.85;
-            transition: all 0.3s;
-
-            &:hover {
-                opacity: 1;
-                transform: scale(1.1);
-                transition: all 0.3s;
-            }
-        }
-
-        .card .card-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            margin: 0;
-            width: 100%;
-            padding: 1rem;
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            pointer-events: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
 @endpush
 @section('main-content')
     <section class="p-0">
@@ -94,8 +26,8 @@
                     <div class="carousel-overlay"></div>
                     <div class="carousel-caption d-md-block" style="top: 20%;">
                         <h1 style="font-size: 45px;">Visit Nepal &nbsp;<img src="./assets/img/np.gif"
-                                style="height: 45px;margin-bottom: 10px;"></h1>
-                        <h3>With locals</h3>
+                                style="height: 45px;margin-bottom: 10px;" alt="flag"></h1>
+                        <h2>With locals</h2>
                     </div>
                     <div class="carousel-caption d-none d-md-block">
                         <h3>Connecting Cultures</h3>
@@ -141,10 +73,283 @@
     <section>
         <div class="container">
             <h1 class="text-center mb-5">Popular Destinations</h1>
+
+            <main>
+                <div class="slider-container">
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1529733905113-027ed85d7e33"
+                                        alt="..." />
+                                    <p class="overlay">
+                                        Hiking
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1554710869-95f3df6a3197" alt="..." />
+                                    <p class="overlay">
+                                        Hiking
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1554710869-95f3df6a3197" alt="..." />
+
+                                    <p class="overlay">
+                                        Hiking
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1602102488252-c4c3daadf1c2"
+                                        alt="..." />
+
+                                    <p class="overlay">
+                                        Hiking
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="swiper-slide">
+                                <div>
+                                    <img src="https://images.unsplash.com/photo-1623492701360-fb4a1205c789"
+                                        alt="..." />
+                                    <p class="overlay">
+                                        Hiking
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-prev">
+                        <img src="https://img.icons8.com/ios/50/000000/chevron-left.png" alt="" />
+                        <p>Back</p>
+                    </div>
+                    <div class="button-next">
+                        <img src="https://img.icons8.com/ios/50/000000/chevron-right.png" alt="" />
+                        <p>Next</p>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </section>
+
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Popular Guides</h1>
+        <div class="row">
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="card mb-4">
+                    <img class="card-img-top"
+                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                        alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="guide-name">Mukesh Mahato</h5>
+                            <h6 class="guide-rate">$999</h6>
+                        </div>
+                        <div class="guide-star ms-5">
+                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
+                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <a href="" class="btn btn-success text-black">View All</a>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <h1 class="text-center mb-5">What our user say</h1>
+
+        <div class="reviews p-5 m-5 pb-0">
+            <div class="row justify-content-center">
+
+                <div class="col-md-6 col-lg-4 mb-5">
+                    <div class="card">
+                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
+                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
+                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
+                            eos aspernatur repellat ducimus autem.</span>
+                    </div>
+                    <div class="arrow-down"></div>
+                    <div class="profile">
+                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
+                        <span class="profile-name">Mukesh Mahato</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-5">
+                    <div class="card">
+                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
+                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
+                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
+                            eos aspernatur repellat ducimus autem.</span>
+                    </div>
+                    <div class="arrow-down"></div>
+                    <div class="profile">
+                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
+                        <span class="profile-name">Mukesh Mahato</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mb-5">
+                    <div class="card">
+                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
+                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
+                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
+                            eos aspernatur repellat ducimus autem.</span>
+                    </div>
+                    <div class="arrow-down"></div>
+                    <div class="profile">
+                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
+                        <span class="profile-name">Mukesh Mahato</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <a href="" class="btn btn-success text-black">View All</a>
         </div>
     </section>
 @endsection
 
 @push('script')
     <script src="./assets/vendor/js/bootstrap.js"></script>
+
+    <script>
+        const swiper = new Swiper(".swiper", {
+            direction: "horizontal",
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 20,
+
+            breakpoints: {
+                320: {
+                    slidesPerView: 1,
+                },
+                530: {
+                    slidesPerView: 2,
+                },
+                768: {
+                    slidesPerView: 3,
+                },
+                1024: {
+                    slidesPerView: 4,
+                },
+            },
+
+            navigation: {
+                nextEl: ".button-next",
+                prevEl: ".button-prev",
+            },
+        });
+    </script>
 @endpush
