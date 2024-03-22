@@ -16,7 +16,7 @@
     local guides and use their spare time to generate some revenue." />
     @stack('title')
     {{-- fonts --}}
-    <link rel="icon" type="image/x-icon" href="./assets/img/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{asset('assets/img/favicon.ico')}}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -59,7 +59,7 @@ class AuthController extends Controller
         $avatar->storeAs('public/profiles/', $avatarName);
 
         $otp = rand(100000, 999999);
-        $user = User::create(array_merge($request->all(), ['avatar' => $avatarName, 'password' => bcrypt($request->password), 'otp' => $otp]));
+        $user = User::create(array_merge($request->all(), ['avatar' => $avatarName, 'password' => bcrypt($request->password), 'otp' => $otp, 'otp_resend_time' => date(now())]));
         // Mail::to($user->email)->send(new WelcomeEmail($user));
 
         $emailContent = ["email" => $request->email, 'otp' => $otp];
@@ -98,6 +98,7 @@ class AuthController extends Controller
 
             if ($user->otp == $request->otp) {
                 $user->verified = 1;
+                $user->email_verified_at = date(now());
                 $user->save();
                 session()->flash('emailVerified', 'Email verified successfully');
 
@@ -106,9 +107,19 @@ class AuthController extends Controller
                 $url = "/$user->role/";
                 return redirect($url);
             } else {
+                $otp_time = Carbon::parse($user->otp_resend_time);
                 $user->otp_count = $user->otp_count - 1;
+                $user->otp_resend_time = $otp_time;
                 $user->save();
                 session()->flash('error', 'Invalid OTP ' . $user->otp_count . " retry left");
+
+                $diff = abs(Carbon::parse($user->otp_resend_time)->diffInMinutes(now()));
+                if ($diff < 2) {
+                    $user_id = $id;
+                    $wait = $diff;
+                    $data = compact('user_id', 'wait');
+                    return redirect('/verify-email/' . $request->user_id)->with($data);
+                }
                 return redirect('/verify-email/' . $request->user_id);
             }
         }
@@ -123,21 +134,21 @@ class AuthController extends Controller
             session()->flash('error', 'OTP limit exceeded');
         }
 
-        $diff = Carbon::parse($user->otp_resend_time)->diffInMinutes(now());
+        $diff = abs(Carbon::parse($user->otp_resend_time)->diffInMinutes(now()));
         if ($diff < 2) {
             $user_id = $id;
             $wait = $diff;
             $data = compact('user_id', 'wait');
             return view('guest.verify_email')->with($data);
         }
-        
+
         return view('guest.verify_email')->with('user_id', $id);
     }
 
     public function resend_otp(Request $request, $id)
     {
         $user = User::find(base64_decode($id));
-        $diff = Carbon::parse($user->otp_resend_time)->diffInMinutes(now());
+        $diff = abs(Carbon::parse($user->otp_resend_time)->diffInMinutes(now()));
         if ($diff > 0) {
             $otp = rand(100000, 999999);
             $user->otp = $otp;

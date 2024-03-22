@@ -24,6 +24,10 @@ class User extends Authenticatable
         'dob',
         'avatar',
         'otp',
+        'otp_count',
+        'otp_resend_time',
+        'verified',
+        'email_verified_at',
     ];
 
     /**
