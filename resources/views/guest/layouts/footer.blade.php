@@ -49,4 +49,5 @@
 </footer>
 
 <script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
 @stack('script')

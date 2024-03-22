@@ -322,8 +322,6 @@
 @endsection
 
 @push('script')
-    <script src="./assets/vendor/js/bootstrap.js"></script>
-
     <script>
         const swiper = new Swiper(".swiper", {
             direction: "horizontal",
