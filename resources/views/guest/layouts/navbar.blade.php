@@ -1,7 +1,7 @@
 <nav class="navbar navbar-example navbar-expand-lg bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ url('/') }}"><img style="height: 30px;margin-left: 20px;margin-right: 20px;"
-                src="./assets/img/logo.png" alt="localnepal" aria-label="localnepal"></a>
+                src="{{ asset('assets/img/logo.png') }}" alt="localnepal" aria-label="localnepal"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-ex-3"
             aria-label="hamburger menu">
             <span class="navbar-toggler-icon"></span>

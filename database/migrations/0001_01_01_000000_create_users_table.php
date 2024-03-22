@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->bigInteger('otp')->nullable();
             $table->enum('role', ['tourist', 'guide','admin']);
+            $table->integer('otp_count')->default(3);
             $table->integer('verified')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

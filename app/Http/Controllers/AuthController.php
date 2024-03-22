@@ -75,7 +75,45 @@ class AuthController extends Controller
         Mail::to($request->email)->send(new SendEmail($data));
 
 
-        return redirect('/login');
+
+        return redirect('/verify-email');
+    }
+
+    public function verify_email(Request $request, $id = null)
+    {
+        if ($request->isMethod('post')) {
+            $id = base64_decode($request->user_id);
+
+            $user = User::where('id', $id)->where('verified', 0)->first();
+
+            if ($user == null || $user->otp_count == 0) {
+                abort(404);
+            }
+
+            if ($user->otp == $request->otp) {
+                $user->verified = 1;
+                $user->save();
+                session()->flash('emailVerified', 'Email verified successfully');
+                return redirect('/login');
+            } else {
+                $user->otp_count = $user->otp_count - 1;
+                $user->save();
+                session()->flash('error', 'Invalid OTP ' . $user->otp_count . " retry left");
+                return redirect('/verify-email/' . $request->user_id);
+            }
+        }
+
+        $user = User::where('id', base64_decode($id))->where('verified', 0)->first();
+
+        if ($user == null) {
+            abort(404);
+        }
+
+        if ($user->otp_count == 0) {
+            session()->flash('error', 'OTP limit exceeded');
+        }
+
+        return view('guest.verify_email')->with('user_id', $id);
     }
 
     public function logout()
