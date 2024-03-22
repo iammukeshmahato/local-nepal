@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
@@ -18,6 +19,12 @@ class AuthController extends Controller
         ]);
 
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+
+
+            $user = auth()->user();
+            if (!$user->verified)
+                return redirect('/verify-email' . '/' . base64_encode($user->id));
+
             $role = auth()->user()->role;
             if ($role == 'tourist') {
                 return redirect('/tourist');
@@ -116,7 +123,36 @@ class AuthController extends Controller
             session()->flash('error', 'OTP limit exceeded');
         }
 
+        $diff = Carbon::parse($user->otp_resend_time)->diffInMinutes(now());
+        if ($diff < 2) {
+            $user_id = $id;
+            $wait = $diff;
+            $data = compact('user_id', 'wait');
+            return view('guest.verify_email')->with($data);
+        }
+        
         return view('guest.verify_email')->with('user_id', $id);
+    }
+
+    public function resend_otp(Request $request, $id)
+    {
+        $user = User::find(base64_decode($id));
+        $diff = Carbon::parse($user->otp_resend_time)->diffInMinutes(now());
+        if ($diff > 0) {
+            $otp = rand(100000, 999999);
+            $user->otp = $otp;
+            $user->otp_count = 3;
+            $user->otp_resend_time = date(now());
+            $user->save();
+            $data = [
+                'otp' => $otp,
+            ];
+
+            Mail::to($user->email)->send(new SendEmail($data));
+        } else {
+            session()->flash('error', "OTP can't be sent now. Please try after few minutes");
+        }
+        return redirect('/verify-email' . '/' . $id);
     }
 
     public function logout()

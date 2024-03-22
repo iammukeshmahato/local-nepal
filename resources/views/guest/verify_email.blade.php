@@ -43,6 +43,15 @@
                             </span>
                         </form>
 
+                        {{-- @if (!isset($wait)) --}}
+                        <a id="resend-btn"
+                            class="btn btn-primary d-grid w-100 text-white mb-3 @if (isset($wait)) {{ 'disabled' }} @endif"
+                            href="{{ url('/resend-otp/' . $user_id) }}">Resend
+                            OTP</a>
+                        {{-- @endif --}}
+
+                        <div class="alert alert-primary" role="alert" id="timer"></div>
+
                         <p class="text-center">
                             <a href="{{ url('/') }}">
                                 <span>Back to home</span>
@@ -54,3 +63,30 @@
         </div>
     </div>
 @endsection
+@push('script')
+    <script>
+        let resend_btn = document.getElementById("resend-btn");
+        let timer = document.getElementById('timer')
+        timer.style = "display:none;";
+        if (resend_btn.classList.contains('disabled')) {
+            // resend_btn.style = "display: none !important;";
+
+
+            setTimeout(() => {
+                resend_btn.classList.remove('disabled');
+                clearInterval($msg);
+                resend_btn.removeAttribute('style');
+                timer.remove();
+            }, 120000);
+
+            // let time = 120;
+            // timer.innerHTML = `Resend OTP ${time} seconds`;
+            // $msg = setInterval(() => {
+            //     --time;
+            //     timer.innerHTML = `Resend OTP ${time} seconds`;
+            // }, 1000);
+        } else {
+            timer.style = "display:none;";
+        }
+    </script>
+@endpush
