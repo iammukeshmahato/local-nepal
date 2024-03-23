@@ -46,6 +46,8 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     });
 
     Route::resource('/guide', GuideController::class);
+    Route::get('/guides/pending', [GuideController::class, 'pending']);
+    Route::get('/guide/{id}/verify', [GuideController::class, 'verify']);
     Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
 });
 

@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="pages-account-settings-connections.html" class="menu-link">
+                    <a href="{{url('/admin/guides/pending')}}" class="menu-link">
                         <div data-i18n="Verify Guide">Verify Guide</div>
                     </a>
                 </li>

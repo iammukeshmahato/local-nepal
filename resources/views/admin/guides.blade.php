@@ -48,33 +48,40 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);"><i
+                                            <a class="dropdown-item" href="{{ url('/admin/guide/' . $guide->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i>
                                                 View</a>
-                                            @if ($guide->status == 'active')
+                                            @if ($guide->status == 'pending')
                                                 <a class="dropdown-item"
-                                                    href="{{ url('admin/guide/' . $guide->id . '/deactive') }}"><i
+                                                    href="{{ url('admin/guide/' . $guide->id . '/verify') }}"><i
                                                         class="bx bx-edit-alt me-1"></i>
-                                                    Deactive</a>
+                                                    Verify</a>
                                             @else
+                                                @if ($guide->status == 'active')
+                                                    <a class="dropdown-item"
+                                                        href="{{ url('admin/guide/' . $guide->id . '/deactive') }}"><i
+                                                            class="bx bx-edit-alt me-1"></i>
+                                                        Deactive</a>
+                                                @else
+                                                    <a class="dropdown-item"
+                                                        href="{{ url('admin/guide/' . $guide->id . '/active') }}"><i
+                                                            class="bx bx-edit-alt me-1"></i>
+                                                        Active</a>
+                                                @endif
                                                 <a class="dropdown-item"
-                                                    href="{{ url('admin/guide/' . $guide->id . '/active') }}"><i
+                                                    href="{{ url('/admin/guide/' . $guide->id . '/edit') }}"><i
                                                         class="bx bx-edit-alt me-1"></i>
-                                                    Active</a>
-                                            @endif
-                                            <a class="dropdown-item"
-                                                href="{{ url('/admin/guide/' . $guide->id . '/edit') }}"><i
-                                                    class="bx bx-edit-alt me-1"></i>
-                                                Edit</a>
+                                                    Edit</a>
 
-                                            <form action="{{ url('/admin/guide/' . $guide->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item" href="javascript:void(0);"
-                                                    onclick="confirm('Are you sure want to delete?')"><i
-                                                        class="bx bx-trash me-1"></i>
-                                                    Delete</button>
-                                            </form>
+                                                <form action="{{ url('/admin/guide/' . $guide->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item" href="javascript:void(0);"
+                                                        onclick="confirm('Are you sure want to delete?')"><i
+                                                            class="bx bx-trash me-1"></i>
+                                                        Delete</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>

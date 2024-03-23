@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Mail\SendCredential;
 use App\Models\Guide;
 use Illuminate\Support\Facades\DB;
+use App\Mail\GuideVerified;
 
 class GuideController extends Controller
 {
@@ -77,7 +78,9 @@ class GuideController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // dd($id, "show");
+        $guide = Guide::with('user')->find($id);
+        return view('admin.show_guide')->with('guide', $guide);
     }
 
     /**
@@ -141,6 +144,28 @@ class GuideController extends Controller
         $guide->delete();
         $guide->user->delete();
         session()->flash('success', 'Guide deleted successfully');
+        return redirect('/admin/guide');
+    }
+
+    public function pending()
+    {
+        $guides = Guide::with('user')->where('status', 'pending')->get();
+        return view('admin.guides')->with('guides', $guides);
+    }
+
+    public function verify($id)
+    {
+        $guide = Guide::find($id);
+        $guide->status = 'active';
+        $guide->save();
+
+        $data = [
+            'name' => $guide->user->name,
+        ];
+
+        Mail::to($guide->user->email)->send(new GuideVerified($data));
+
+        session()->flash('success', 'Guide verified successfully');
         return redirect('/admin/guide');
     }
 }

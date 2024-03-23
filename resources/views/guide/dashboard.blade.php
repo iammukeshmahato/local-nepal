@@ -63,7 +63,13 @@
     @if (isset($profile_completed) && $profile_completed && $guide->status != 'active')
         <div class="col-md-12">
             <div class="card mb-4">
-                <h5 class="card-header">Your profile is completed and waiting for admin approval
+                <h5 class="card-header">
+                    @if ($guide->status == 'pending')
+                        Your profile is completed and waiting for admin approval
+                    @elseif($guide->status == 'deactive')
+                        Your account is deactivated by admin. Please contact admin for more information.
+                    @endif
+
                 </h5>
                 <span class="card-header">Status:
 
