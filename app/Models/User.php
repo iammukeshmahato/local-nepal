@@ -30,6 +30,11 @@ class User extends Authenticatable
         'email_verified_at',
     ];
 
+    public function guides()
+    {
+        return $this->hasMany(Guide::class); // Has many Guides
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

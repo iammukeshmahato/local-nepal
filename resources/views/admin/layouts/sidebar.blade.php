@@ -26,12 +26,12 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="pages-account-settings-notifications.html" class="menu-link">
+                    <a href="{{ url('/admin/guide/create') }}" class="menu-link">
                         <div data-i18n="Add Guide">Add Guide</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="pages-account-settings-account.html" class="menu-link">
+                    <a href="{{ url('/admin/guide') }}" class="menu-link">
                         <div data-i18n="View Guide">View Guide</div>
                     </a>
                 </li>

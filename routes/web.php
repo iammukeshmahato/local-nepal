@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\admin\GuideController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\Authenticate;
+use App\Models\Guide;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/login', function () {
@@ -38,4 +40,6 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     });
+
+    Route::resource('/guide', GuideController::class);
 });
