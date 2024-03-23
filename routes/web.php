@@ -42,4 +42,5 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     });
 
     Route::resource('/guide', GuideController::class);
+    Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
 });

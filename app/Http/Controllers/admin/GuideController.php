@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\SendCredential;
 use App\Models\Guide;
+use Illuminate\Support\Facades\DB;
 
 class GuideController extends Controller
 {
@@ -84,7 +85,24 @@ class GuideController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $guide = Guide::with('user')->find($id);
+        return view('admin.edit_guide')->with('guide', $guide);
+    }
+
+
+    public function update_status($id, $status)
+    {
+        $guide = Guide::find($id);
+        if ($status == 'active') {
+            $guide->status = 'active';
+            $guide->save();
+            session()->flash('success', 'Guide activated successfully');
+        } elseif ($status == 'deactive') {
+            $guide->status = 'deactive';
+            $guide->save();
+            session()->flash('success', 'Guide deactivated successfully');
+        }
+        return redirect('/admin/guide');
     }
 
     /**
@@ -92,7 +110,26 @@ class GuideController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required | min:3 | regex:/^[a-z A-Z]+$/u',
+            'phone' => 'required | min:10 | max:10 | regex:/^[0-9]+$/u',
+            'dob' => 'required | date',
+            'address' => 'required | string',
+        ]);
+
+        DB::transaction(function () use ($request, $id) {
+            // Update guide table
+            $guide = Guide::find($id);
+            $guide->update($request->all());
+
+            // Update user table (assuming user data is in the request)
+            $user = User::find($guide->user_id); // Access user using relationship
+            $user->update($request->only('name', 'dob')); // Update specific user fields
+        });
+
+        session()->flash('success', 'Guide updated successfully');
+
+        return redirect('admin/guide');
     }
 
     /**

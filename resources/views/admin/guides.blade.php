@@ -51,7 +51,19 @@
                                             <a class="dropdown-item" href="javascript:void(0);"><i
                                                     class="bx bx-edit-alt me-1"></i>
                                                 View</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"><i
+                                            @if ($guide->status == 'active')
+                                                <a class="dropdown-item"
+                                                    href="{{ url('admin/guide/' . $guide->id . '/deactive') }}"><i
+                                                        class="bx bx-edit-alt me-1"></i>
+                                                    Deactive</a>
+                                            @else
+                                                <a class="dropdown-item"
+                                                    href="{{ url('admin/guide/' . $guide->id . '/active') }}"><i
+                                                        class="bx bx-edit-alt me-1"></i>
+                                                    Active</a>
+                                            @endif
+                                            <a class="dropdown-item"
+                                                href="{{ url('/admin/guide/' . $guide->id . '/edit') }}"><i
                                                     class="bx bx-edit-alt me-1"></i>
                                                 Edit</a>
 
