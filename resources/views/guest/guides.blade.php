@@ -12,7 +12,7 @@
         <h1 class="text-center mb-5">Popular Guides</h1>
         <div class="row">
             @foreach ($guides as $guide)
-                <div class="col-md-4 col-ld-3 mb-5 guide">
+                <div class="col-md-4 col-ld-3 mb-5 guide position-relative">
                     <div class="card mb-4">
                         <img class="card-img-top" src="{{ asset('storage/profiles/' . $guide->user->avatar) }}"
                             alt="Card image cap">
@@ -28,8 +28,8 @@
                                     class='bx bx-star'></i><i class='bx bx-star'></i>
                             </div>
                         </div>
-                        <a href="{{ url('/guides/' . base64_encode($guide->id)) }}" class="stretched-link"></a>
                     </div>
+                    <a href="{{ url('/guides/' . base64_encode($guide->id)) }}" class="stretched-link"></a>
                 </div>
             @endforeach
         </div>
