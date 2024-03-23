@@ -7,6 +7,7 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\Authenticate;
 use App\Models\Guide;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\guest\GuideController as GuestGuideController;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -29,6 +30,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     return view('guest.index');
 });
+
+Route::resource('/guides', GuestGuideController::class);
 
 
 // admin routes
