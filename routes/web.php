@@ -36,6 +36,6 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     });
 
     Route::get('/dashboard', function () {
-        dd('admin dashboard');
+        return view('admin.dashboard');
     });
 });
