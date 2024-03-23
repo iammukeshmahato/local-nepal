@@ -51,7 +51,7 @@ class GuideController extends Controller
 
         $national_id = $request->file('national_id');
         $national_id_name = $national_id->getClientOriginalName();
-        $national_id->storeAs('public/guides/id/', $avatarName);
+        $national_id->storeAs('public/guides/id/', $national_id_name);
 
         $password = Str::password(8);
 
