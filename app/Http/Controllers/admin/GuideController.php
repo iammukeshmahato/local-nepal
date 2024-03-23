@@ -100,6 +100,10 @@ class GuideController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $guide = Guide::find($id);
+        $guide->delete();
+        $guide->user->delete();
+        session()->flash('success', 'Guide deleted successfully');
+        return redirect('/admin/guide');
     }
 }
