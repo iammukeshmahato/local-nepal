@@ -35,6 +35,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Guide::class); // Has many Guides
     }
+    public function tourists()
+    {
+        return $this->hasMany(Tourist::class); // Has many Guides
+    }
 
     /**
      * The attributes that should be hidden for serialization.

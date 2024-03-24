@@ -1,4 +1,4 @@
-@extends('guide.layouts.main')
+@extends('tourist.layouts.main')
 @push('title')
     <title>Profile - Tourist | LocalNepal</title>
 @endpush
