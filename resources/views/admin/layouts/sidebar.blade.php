@@ -51,7 +51,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="pages-account-settings-account.html" class="menu-link">
+                    <a href="{{url('/admin/tourist')}}" class="menu-link">
                         <div data-i18n="View Guide">View Tourist</div>
                     </a>
                 </li>

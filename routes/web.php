@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Tourist;
+use App\Http\Controllers\admin\TouristController;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -52,6 +53,8 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/guides/pending', [GuideController::class, 'pending']);
     Route::get('/guide/{id}/verify', [GuideController::class, 'verify']);
     Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
+
+    Route::get('/tourist', [TouristController::class, 'index']);
 });
 
 
