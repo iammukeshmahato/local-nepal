@@ -11,6 +11,7 @@ use App\Http\Controllers\guest\GuideController as GuestGuideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Tourist;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -98,7 +99,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         // dd($request->all(), $user, $guide);
         DB::transaction(function () use ($request, $user, $guide) {
             $guide->update($request->all());
-            $user = User::find($guide->user_id); 
+            $user = User::find($guide->user_id);
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
                 $avatarName = $avatar->getClientOriginalName();
@@ -121,6 +122,50 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     });
 
     Route::get('/dashboard', function () {
+        $user = Auth::user();
+        $tourist = Tourist::where('user_id', $user->id)->first();
+        if (!$tourist) {
+            $profile_completed = false;
+            return view('tourist.dashboard')->with(compact('user', 'profile_completed'));
+        } else {
+            $profile_completed = true;
+            return view('tourist.dashboard')->with(compact('tourist', 'profile_completed'));
+        }
         return view('tourist.dashboard');
+    });
+
+    Route::post('/update-profile', function (Request $request) {
+        $user = Auth::user();
+
+        Tourist::create($request->all() + ['user_id' => $user->id]);
+        session()->flash('success', 'Profile updated successfully');
+        return redirect('tourist/dashboard');
+    });
+
+    Route::get('/profile', function () {
+        $user = Auth::user();
+        $tourist = Tourist::where('user_id', $user->id)->first();
+        // dd($user, $tourist);
+        return view('tourist.profile')->with(compact('user', 'tourist'));
+    });
+
+    Route::post('/profile', function (Request $request) {
+        $user = Auth::user();
+        $tourist = Tourist::where('user_id', $user->id)->first();
+        // dd($request->all(), $user, $tourist);
+        DB::transaction(function () use ($request, $user, $tourist) {
+            $tourist->update($request->all());
+            $user = User::find($tourist->user_id);
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = $avatar->getClientOriginalName();
+                $avatar->storeAs('public/profiles/', $avatarName);
+                $user->avatar = $avatarName;
+            }
+            $user->update($request->only('dob'));
+
+            session()->flash('success', 'Profile updated successfully');
+        });
+        return view('tourist.profile')->with(compact('user', 'tourist'));
     });
 });
