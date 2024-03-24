@@ -19,6 +19,8 @@ class Guide extends Model
         'languages',
         'avg_rating',
         'rate',
+        'location',
+        'about'
     ];
 
     public function user()

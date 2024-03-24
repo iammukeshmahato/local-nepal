@@ -16,7 +16,7 @@
                             <p class="my-2 text-center">Profile Picture</p>
                         </div>
                         <div class="col-md-4">
-                            <img src="{{ asset('storage/profiles/' . $guide->national_id) }}" alt="user-avatar"
+                            <img src="{{ asset('storage/guides/id/' . $guide->national_id) }}" alt="user-avatar"
                                 class="d-block rounded" height="100%" width="100%" id="uploadedAvatar" />
                             <p class="my-2 text-center">National Id</p>
                         </div>

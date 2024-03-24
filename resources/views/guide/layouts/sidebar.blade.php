@@ -13,9 +13,9 @@
     <ul class="menu-inner py-1 mt-4">
         <!-- Dashboards -->
         <li class="menu-item active open">
-            <a href="javascript:void(0);" class="menu-link">
+            <a href="{{ url('/' . Auth::user()->role . '/dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Dashboards">Dashboards</div>
+                <div data-i18n="Dashboards">Dashboard</div>
             </a>
         </li>
         @php
@@ -97,12 +97,14 @@
         <!-- Components -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Setting</span></li>
         <!-- Cards -->
-        <li class="menu-item">
-            <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Profile</div>
-            </a>
-        </li>
+        @if (isset($guide))
+            <li class="menu-item">
+                <a href="{{ url('/guide/profile') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-collection"></i>
+                    <div data-i18n="Basic">Profile</div>
+                </a>
+            </li>
+        @endif
 
         <li class="menu-item">
             <a href="{{ url('/logout') }}" class="menu-link">

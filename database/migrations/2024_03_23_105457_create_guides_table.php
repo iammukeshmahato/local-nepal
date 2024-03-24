@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('phone');
             $table->string('address');
+            $table->string('location')->nullable();
+            $table->string('about')->nullable();
             $table->string('national_id');
             $table->enum('status',['active','deactive','pending'])->default('pending')->comment('active, pending, approved, rejected');
             $table->string('languages')->nullable();

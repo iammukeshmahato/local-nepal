@@ -9,6 +9,8 @@ use App\Models\Guide;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\guest\GuideController as GuestGuideController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -82,5 +84,43 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         Guide::create(array_merge($request->all(), ['user_id' => $user->id, 'status' => 'pending', 'national_id' => $national_id_name]));
         session()->flash('success', 'Profile updated successfully wait for admin approval');
         return redirect('guide/dashboard');
+    });
+
+    Route::get('/profile', function () {
+        $user = Auth::user();
+        $guide = Guide::where('user_id', $user->id)->first();
+        return view('guide.profile')->with(compact('user', 'guide'));
+    });
+
+    Route::post('/profile', function (Request $request) {
+        $user = Auth::user();
+        $guide = Guide::where('user_id', $user->id)->first();
+        // dd($request->all(), $user, $guide);
+        DB::transaction(function () use ($request, $user, $guide) {
+            $guide->update($request->all());
+            $user = User::find($guide->user_id); 
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = $avatar->getClientOriginalName();
+                $avatar->storeAs('public/profiles/', $avatarName);
+                $user->avatar = $avatarName;
+            }
+            $user->update($request->only('dob'));
+
+            session()->flash('success', 'Profile updated successfully');
+        });
+        return view('guide.profile')->with(compact('user', 'guide'));
+    });
+});
+
+
+// tourist routes
+Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], function () {
+    Route::get('/', function () {
+        return redirect('tourist/dashboard');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('tourist.dashboard');
     });
 });
