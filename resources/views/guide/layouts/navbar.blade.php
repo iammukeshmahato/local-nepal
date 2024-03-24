@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <span class="fw-medium d-block">{{ Auth::user()->name }}</span>
-                                    <small class="text-muted">Guide</small>
+                                    <small class="text-muted text-capitalize">{{ Auth::user()->role }}</small>
                                 </div>
                             </div>
                         </a>
@@ -49,7 +49,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ url('/guide/profile') }}">
                             <i class="bx bx-user me-2"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
