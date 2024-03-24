@@ -22,7 +22,10 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);"
                     data-bs-toggle="dropdown">
-                    <span class="me-4">Mukesh Mahato</span>
+                    <div class="d-flex flex-column justify-content-center align-items-center me-4">
+                        <span>{{ Auth::user()->name }}</span>
+                        <small class="text-muted text-capitalize">{{ Auth::user()->role }}</small>
+                    </div>
                     <div class="avatar avatar-online">
                         <img src="{{ asset('assets/img/profile.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
