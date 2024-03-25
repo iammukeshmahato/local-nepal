@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Tourist;
 use App\Http\Controllers\admin\TouristController;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\admin\DestinationController;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -62,6 +63,8 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
 
     Route::get('/tourist', [TouristController::class, 'index']);
+
+    Route::resource('/destination', DestinationController::class);
 
     Route::get('/update-password', function () {
         return view('admin.update_password');
