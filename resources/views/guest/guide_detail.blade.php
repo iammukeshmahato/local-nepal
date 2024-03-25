@@ -70,8 +70,10 @@
                     <h5 class="mb-3">Phone: {{ $guide->phone }}</h5>
                     <h5 class="mb-3">Email: {{ $guide->user->email }}</h5>
                     <h5 class="mb-3">Location: {{ $guide->location }} </h5>
+                    <h5 class="mb-3">Rate: ${{ $guide->rate }}/hr </h5>
 
-                    <a href="{{ url('/guides/' . base64_encode($guide->id)) }}" class="btn btn-primary">Book Now</a>
+                    <a href="{{ url('/guides/' . base64_encode($guide->id) . '/book') }}" class="btn btn-primary">Book
+                        Now</a>
                 </div>
             </div>
         </div>
@@ -82,9 +84,7 @@
             <div class="col-md-8">
                 <div class="about mt-5">
                     <h2 class="mb-3">About</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia cum minus suscipit, minima
-                        veritatis officiis quisquam facere atque officia eos possimus deserunt error illo maxime, saepe est
-                        quae in non.</p>
+                    <p>{{ $guide->about }}</p>
                 </div>
 
                 <div class="about mt-5">

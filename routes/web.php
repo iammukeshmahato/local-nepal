@@ -45,6 +45,8 @@ Route::get('/', function () {
 });
 
 Route::resource('/guides', GuestGuideController::class);
+Route::get('/guides/{id}/book', [GuestGuideController::class, 'book_guide_form']);
+Route::post('/guides/{id}/book', [GuestGuideController::class, 'book_guide']);
 
 
 // admin routes
@@ -202,6 +204,11 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
 
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
+
+        $request->validate([
+            'phone' => 'required | digits:10 | min:10 | max:10 | unique:guides,phone| unique:tourists,phone',
+            'nationality' => 'required | string',
+        ]);
 
         Tourist::create($request->all() + ['user_id' => $user->id]);
         session()->flash('success', 'Profile updated successfully');

@@ -26,6 +26,12 @@
                             <label for="phone" class="form-label">Phone</label>
                             <input type="number" class="form-control" id="phone" name="phone"
                                 placeholder="9800000000" required />
+
+                            @error('phone')
+                                <div class="alert alert-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
 
                         <div class="mb-3 col-md-3">

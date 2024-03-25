@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Models\Guide;
+use Illuminate\Support\Facades\Auth;
 
 class GuideController extends Controller
 {
@@ -69,5 +71,23 @@ class GuideController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function book_guide_form(string $id)
+    {
+        if (!Auth::check() || Auth::user()->role != 'tourist') {
+            abort(403, 'Log in as a tourist to book a guide');
+            session()->flash('error', 'You need to login to book a guide');
+            return redirect('/login');
+        }
+        $guide = Guide::with('user')->find(base64_decode($id));
+        return view('guest.book_guide', compact('guide'));
+    }
+
+    public function book_guide(Request $request)
+    {
+        $booking = Booking::create(array_merge($request->all(), ['tourist_id' => Auth::user()->id]));
+        session()->flash('success', 'Booking successful');
+        return redirect('/guides/' . base64_encode($booking->guide_id));
     }
 }
