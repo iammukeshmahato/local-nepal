@@ -9,6 +9,7 @@ use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Password;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class AuthController extends Controller
 {
@@ -215,7 +216,7 @@ class AuthController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
-                    'password' => bcrypt($password)
+                    'password' => $password
                 ])->save();
             }
         );
@@ -224,12 +225,9 @@ class AuthController extends Controller
             session()->flash('success', 'Password reset successfully');
         } else {
             session()->flash('error', 'Invalid token or email');
+            return back();
         }
         return redirect('/login');
-        return $status == Password::PASSWORD_RESET
-            ?
-            redirect('/login')->with('success', 'Password reset successfully')
-            : back()->withErrors(['loginError' => 'Invalid token or email']);
     }
 
     public function logout()
