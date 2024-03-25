@@ -29,6 +29,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/verify-email/{id}', [AuthController::class, 'verify_email'])->name('verify_email');
 Route::post('/verify-email', [AuthController::class, 'verify_email'])->name('verify_email');
 Route::get('/resend-otp/{id}', [AuthController::class, 'resend_otp'])->name('verify_email');
+Route::get('/reset-password', [AuthController::class, 'forget_password'])->middleware('guest');
+Route::post('/reset-password', [AuthController::class, 'forget_password_verify'])->middleware('guest');
+Route::get('/reset-password-form/{email}/{token}', function (string $email, string $token) {
+    return view('guest.reset-password', ['token' => $token, 'email' => $email]);
+})->middleware('guest');
+Route::post('/reset-password/new', [AuthController::class, 'reset_password'])->middleware('guest');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

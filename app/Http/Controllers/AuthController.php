@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -164,6 +165,71 @@ class AuthController extends Controller
             session()->flash('error', "OTP can't be sent now. Please try after few minutes");
         }
         return redirect('/verify-email' . '/' . $id);
+    }
+
+    public function forget_password(Request $request)
+    {
+        return view('guest.forget_password');
+    }
+
+    public function forget_password_verify(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+        if ($user == null) {
+            session()->flash('error', 'Sorry, we can\'t find a user with that email address.');
+            return back();
+        }
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status == Password::RESET_LINK_SENT) {
+            session()->flash('success', 'We have emailed your password reset link!');
+        } else {
+            session()->flash('error', 'Sorry, we can\'t send reset password link to this email address.');
+        }
+
+        return back();
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['status' => 'Rest password link sent to your email address.'])
+            : back()->withErrors(['email' => 'Sorry, we can\'t send reset password link to this email address.']);
+    }
+
+    public function reset_password_form($token)
+    {
+        return view('guest.reset-password', ['token' => $token]);
+    }
+
+    public function reset_password(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:6',
+            'token' => 'required',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ])->save();
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            session()->flash('success', 'Password reset successfully');
+        } else {
+            session()->flash('error', 'Invalid token or email');
+        }
+        return redirect('/login');
+        return $status == Password::PASSWORD_RESET
+            ?
+            redirect('/login')->with('success', 'Password reset successfully')
+            : back()->withErrors(['loginError' => 'Invalid token or email']);
     }
 
     public function logout()

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class User extends Authenticatable
 {
@@ -69,6 +70,10 @@ class User extends Authenticatable
 
         static::deleting(function ($user) {
             Storage::delete('public/profiles/' . $user->avatar);
+        });
+
+        ResetPassword::createUrlUsing(function (User $user, string $token) {
+            return  url('/reset-password-form') . '/' . $user->email . '/' . $token;
         });
     }
 }

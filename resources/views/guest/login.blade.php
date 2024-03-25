@@ -24,6 +24,11 @@
                                 {{ session()->get('loginError') }}
                             </div>
                         @endif
+                        @if (session()->has('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
 
                         <form class="mb-3" action="" method="POST">
                             @csrf
@@ -35,7 +40,7 @@
                             <div class="mb-3 form-password-toggle">
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label" for="password">Password</label>
-                                    <a href="">
+                                    <a href="{{ url('/reset-password') }}">
                                         <small>Forgot Password?</small>
                                     </a>
                                 </div>
