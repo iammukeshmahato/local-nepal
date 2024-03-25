@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Tourist;
 use App\Http\Controllers\admin\TouristController;
+use Illuminate\Support\Facades\Hash;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -61,6 +62,29 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
 
     Route::get('/tourist', [TouristController::class, 'index']);
+
+    Route::get('/update-password', function () {
+        return view('admin.update_password');
+    });
+
+    Route::post('/update-password', function (Request $request) {
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required| confirmed | min:6',
+        ]);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            session()->flash('error', 'Old password is incorrect');
+            return redirect('admin/update-password');
+        }
+        $user = User::find($user->id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        session()->flash('success', 'Password updated successfully');
+        return redirect('/admin/update-password');
+    });
 });
 
 
@@ -121,6 +145,30 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         });
         return view('guide.profile')->with(compact('user', 'guide'));
     });
+
+    Route::get('/update-password', function () {
+        return view('guide.update_password');
+    });
+
+    Route::post('/update-password', function (Request $request) {
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required| confirmed | min:6',
+        ]);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            session()->flash('error', 'Old password is incorrect');
+            return redirect('guide/update-password');
+        }
+        $user = User::find($user->id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        session()->flash('success', 'Password updated successfully');
+        Auth::logout();
+        return redirect('/login');
+    });
 });
 
 
@@ -176,5 +224,29 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             session()->flash('success', 'Profile updated successfully');
         });
         return view('tourist.profile')->with(compact('user', 'tourist'));
+    });
+
+    Route::get('/update-password', function () {
+        return view('tourist.update_password');
+    });
+
+    Route::post('/update-password', function (Request $request) {
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required| confirmed | min:6',
+        ]);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            session()->flash('error', 'Old password is incorrect');
+            return redirect('tourist/update-password');
+        }
+        $user = User::find($user->id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        session()->flash('success', 'Password updated successfully');
+        Auth::logout();
+        return redirect('/login');
     });
 });

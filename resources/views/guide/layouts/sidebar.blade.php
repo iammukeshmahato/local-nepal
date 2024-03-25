@@ -104,6 +104,12 @@
                     <div data-i18n="Basic">Profile</div>
                 </a>
             </li>
+            <li class="menu-item">
+                <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-collection"></i>
+                    <div data-i18n="Basic">Update Password</div>
+                </a>
+            </li>
         @endif
 
         <li class="menu-item">
