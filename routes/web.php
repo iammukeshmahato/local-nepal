@@ -114,6 +114,12 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
 
+        $request->validate([
+            'phone' => 'required | digits:10 | min:10 | max:10 | unique:guides,phone| unique:tourists,phone',
+            'address' => 'required | string',
+            'national_id' => 'required | image',
+        ]);
+
         $national_id = $request->file('national_id');
         $national_id_name = $national_id->getClientOriginalName();
         $national_id->storeAs('public/guides/id/', $national_id_name);

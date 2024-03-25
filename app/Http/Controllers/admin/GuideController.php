@@ -39,7 +39,7 @@ class GuideController extends Controller
         $request->validate([
             'name' => 'required | min:3 | regex:/^[a-z A-Z]+$/u',
             'email' => 'required | email | unique:users,email',
-            'phone' => 'required | min:10 | max:10 | regex:/^[0-9]+$/u',
+            'phone' => 'required | min:10 | max:10 |unique:guides,phone|unique:tourists,phone| regex:/^[0-9]+$/u',
             'dob' => 'required | date',
             'address' => 'required | string',
             'avatar' => 'required | image | mimes:jpeg,png,jpg,gif,svg | max:2048',

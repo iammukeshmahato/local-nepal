@@ -47,20 +47,18 @@
         <!-- Components -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Setting</span></li>
         <!-- Cards -->
-        @if (isset($guide) || isset($tourist))
-            <li class="menu-item">
-                <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-collection"></i>
-                    <div data-i18n="Basic">Profile</div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-collection"></i>
-                    <div data-i18n="Basic">Update Password</div>
-                </a>
-            </li>
-        @endif
+        <li class="menu-item">
+            <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Profile</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Update Password</div>
+            </a>
+        </li>
 
         <li class="menu-item">
             <a href="{{ url('/logout') }}" class="menu-link">
