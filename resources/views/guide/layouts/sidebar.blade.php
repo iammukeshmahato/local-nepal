@@ -97,9 +97,9 @@
         <!-- Components -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Setting</span></li>
         <!-- Cards -->
-        @if (isset($guide))
+        @if (isset($guide) || isset($tourist))
             <li class="menu-item">
-                <a href="{{ url('/guide/profile') }}" class="menu-link">
+                <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-collection"></i>
                     <div data-i18n="Basic">Profile</div>
                 </a>

@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="{{url('/admin/guides/pending')}}" class="menu-link">
+                    <a href="{{ url('/admin/guides/pending') }}" class="menu-link">
                         <div data-i18n="Verify Guide">Verify Guide</div>
                     </a>
                 </li>
@@ -51,7 +51,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="{{url('/admin/tourist')}}" class="menu-link">
+                    <a href="{{ url('/admin/tourist') }}" class="menu-link">
                         <div data-i18n="View Guide">View Tourist</div>
                     </a>
                 </li>
@@ -137,7 +137,7 @@
         </li>
 
         <li class="menu-item">
-            <a href="cards-basic.html" class="menu-link">
+            <a href="{{ url('/logout') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
                 <div data-i18n="Basic">Logout</div>
             </a>
