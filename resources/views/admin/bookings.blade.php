@@ -3,5 +3,5 @@
     <title>Bookings - Admin | LocalNepal</title>
 @endpush
 @section('main-content')
-    @include('components.booking_table');
+    @include('components.booking_table')
 @endsection
