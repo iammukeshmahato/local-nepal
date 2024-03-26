@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use App\Models\Guide;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Tourist;
 
 class GuideController extends Controller
 {
@@ -86,7 +87,9 @@ class GuideController extends Controller
 
     public function book_guide(Request $request)
     {
-        $booking = Booking::create(array_merge($request->all(), ['tourist_id' => Auth::user()->id]));
+        $user_id = Auth::user()->id;
+        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
+        $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
         session()->flash('success', 'Booking successful');
         return redirect('/guides/' . base64_encode($booking->guide_id));
     }

@@ -70,6 +70,7 @@
                     <h5 class="mb-3">Email: {{ $guide->user->email }}</h5>
                     <h5 class="mb-3">Location: {{ $guide->location }} </h5>
                     <h5 class="mb-3">Rate: $<span id="rate">{{ $guide->rate }}</span>/hr </h5>
+                    <h5 class="mb-3">Rate: $<span id="rate_day">150</span>/day </h5>
                 </div>
             </div>
 
@@ -96,17 +97,53 @@
                                 <p id="total_days">Total Days: <strong>0</strong></p>
                             </div>
                             <div class="mb-3 col-md-6">
-                                <p>Total Cost: <strong id="total_cost">$100</strong></p>
+                                <p>Total Cost: <strong id="total_cost">$0</strong></p>
                             </div>
 
-                            <div class="mb-3 col-md-12 d-flex justify-content-end">
-                                <input class="btn btn-success" type="submit" value="Book Guide">
+                            <div class="mb-3 col-md-12">
+                                <label for="message" class="form-label">Payment Method</label>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label
+                                    class="form-check-label custom-option-content form-check-input-payment d-flex gap-3 align-items-center"
+                                    for="khalti">
+                                    <input name="payment" class="form-check-input" type="radio" value="khalti"
+                                        id="khalti" checked="" onclick="payment_method()">
+                                    <span class="custom-option-body">
+                                        <img src="{{ asset('assets/img/payments/khalti.jpg') }}" alt="visa-card"
+                                            width="58" data-app-light-img="icons/payments/visa-light.png"
+                                            data-app-dark-img="icons/payments/visa-dark.png">
+                                        <span class="ms-3">Khalti Wallet</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label
+                                    class="form-check-label custom-option-content form-check-input-payment d-flex gap-3 align-items-center"
+                                    for="cash">
+                                    <input name="payment" class="form-check-input" type="radio" value="cash"
+                                        id="cash" checked="" onclick="payment_method()">
+                                    <span class="custom-option-body">
+                                        <img src="{{ asset('assets/img/payments/cash.jpg') }}" alt="visa-card"
+                                            width="58" data-app-light-img="icons/payments/visa-light.png"
+                                            data-app-dark-img="icons/payments/visa-dark.png">
+                                        <span class="ms-3">By Cash</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="col-md-12 d-flex justify-content-end">
+                                <input class="btn btn-success" id="submit_btn" type="submit" value="Pay by Cash">
                             </div>
                         </div>
-                    </div>
 
+                    </div>
             </div>
+
         </div>
+    </div>
     </div>
 @endsection
 
@@ -119,17 +156,26 @@
         let total_cost = document.getElementById('total_cost');
         let total_days = document.getElementById('total_days');
         const rate = document.getElementById('rate').innerText;
+        const rate_day = document.getElementById('rate_day').innerText;
 
         start_date.addEventListener('change', () => {
             const today = new Date();
             const selectedDate = new Date(start_date.value);
-            if (selectedDate < today) {
+            const selectedEndDate = new Date(end_date.value);
+            if (selectedDate < today || selectedEndDate < selectedDate) {
                 alert('Please select a valid start date');
                 start_date.value = '';
             }
             days_diff();
         });
         end_date.addEventListener('change', () => {
+            const today = new Date();
+            const selectedDate = new Date(start_date.value);
+            const selectedEndDate = new Date(end_date.value);
+            if (selectedDate < today || selectedEndDate < selectedDate) {
+                alert('Please select a valid end date');
+                start_date.value = '';
+            }
             days_diff();
         });
 
@@ -137,17 +183,35 @@
             let start = new Date(start_date.value);
             let end = new Date(end_date.value);
             let diff = end - start;
-            let days = diff / (1000 * 60 * 60 * 24);
-            let hours = Math.ceil(diff / (1000 * 60 * 60));
+            let days = (diff / (1000 * 60 * 60 * 24));
+            let hours = Math.round(diff / (1000 * 60 * 60));
             if (days < 0 || isNaN(days) || hours < 24) {
                 days = 0;
                 total_days.innerHTML = `Total Hours: <strong>${hours} Hours</strong>`;
-                cost = Math.abs(hours * rate);
+                cost = Math.ceil(Math.abs(hours * rate));
             } else {
-                total_days.innerHTML = `Total Days: <strong>${hours} Hours</strong>`;
-                cost = Math.abs(days * rate * 24);
+                total_days.innerHTML = `Total Days: <strong>${Math.round(days)} Days</strong>`;
+                cost = Math.ceil(Math.abs(days * rate * 24));
+                if (days >= 1) {
+                    cost = Math.ceil(Math.abs(days * rate_day));
+                }
             }
             total_cost.innerText = `$${cost}`;
+        }
+
+        function payment_method() {
+            let submit_btn = document.getElementById('submit_btn');
+            let payment = document.querySelector('input[name="payment"]:checked').value;
+            if (payment == 'khalti') {
+                submit_btn.value = 'Pay by Khalti';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/payment/khalti') }}");
+            } else {
+                submit_btn.value = 'Pay by Cash';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/guides/' . base64_encode($guide->id) . '/book') }}");
+
+            }
         }
     </script>
 @endpush
