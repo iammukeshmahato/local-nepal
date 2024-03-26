@@ -9,6 +9,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\Guide;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tourist;
+use App\Models\GuideReview;
 
 class GuideController extends Controller
 {
@@ -45,9 +46,12 @@ class GuideController extends Controller
      */
     public function show(string $id)
     {
-        $guide = Guide::with('user')->find(base64_decode($id));
-        // dd($guide);
-        return view('guest.guide_detail', compact('guide'));
+        $guide = Guide::with('user', 'reviews')->find(base64_decode($id));
+        Paginator::useBootstrap();
+        $perPage = 1;
+        $guide_reviews = GuideReview::with('tourist')->paginate($perPage);
+        // dd($guide_reviews);
+        return view('guest.guide_detail', compact('guide', 'guide_reviews'));
     }
 
     /**
@@ -92,5 +96,43 @@ class GuideController extends Controller
         $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
         session()->flash('success', 'Booking successful');
         return redirect('/guides/' . base64_encode($booking->guide_id));
+    }
+
+    public function review_guide(Request $request, string $id)
+    {
+        // dd($request->all());
+
+        if (!Auth::check() || Auth::user()->role != 'tourist') {
+            abort(403, 'Log in as a tourist to review a guide');
+            session()->flash('error', 'You need to login to review a guide');
+            return redirect('/login');
+        }
+
+        $user_id = Auth::user()->id;
+        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
+
+        $is_booking_completed = Booking::where('guide_id', base64_decode($id))->where('tourist_id', $tourist->id)->where('status', 'completed')->first() ? true : false;
+        if (!$is_booking_completed) {
+            session()->flash('error', 'You can only review a guide you have booked and completed a tour with');
+            return redirect()->back();
+        }
+
+        $is_already_reviewed = GuideReview::where('guide_id', base64_decode($id))->where('tourist_id', $tourist->id)->first() ? true : false;
+        if ($is_already_reviewed) {
+            session()->flash('error', 'You have already reviewed this guide');
+            return redirect()->back();
+        }
+
+        $guide_review = GuideReview::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
+        session()->flash('success', 'Review submitted successfully');
+        return redirect()->back();
+    }
+
+    public function delete_guide_review($id)
+    {
+        $guide_review = GuideReview::find(base64_decode($id));
+        $guide_review->delete();
+        session()->flash('success', 'Review deleted successfully');
+        return redirect()->back();
     }
 }

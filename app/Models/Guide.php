@@ -28,6 +28,11 @@ class Guide extends Model
         return $this->belongsTo(User::class); // Belongs to a User
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(GuideReview::class); // Has many GuideReviews
+    }
+    
     protected static function boot()
     {
         parent::boot();

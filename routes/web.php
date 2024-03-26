@@ -49,7 +49,8 @@ Route::get('/', function () {
 Route::resource('/guides', GuestGuideController::class);
 Route::get('/guides/{id}/book', [GuestGuideController::class, 'book_guide_form']);
 Route::post('/guides/{id}/book', [GuestGuideController::class, 'book_guide']);
-
+Route::post('/guides/{id}/rate', [GuestGuideController::class, 'review_guide']);
+Route::get('/guides/review/{id}/delete', [GuestGuideController::class, 'delete_guide_review']);
 
 // admin routes
 Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAuth::class]], function () {
