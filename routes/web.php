@@ -15,6 +15,8 @@ use App\Models\Tourist;
 use App\Http\Controllers\admin\TouristController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
+use App\Http\Controllers\admin\BookingController;
+use App\Models\Booking;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -67,7 +69,7 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/tourist', [TouristController::class, 'index']);
 
     Route::resource('/destination', DestinationController::class);
-
+    Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/update-password', function () {
         return view('admin.update_password');
     });
@@ -112,6 +114,17 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         }
         return view('guide.dashboard');
     });
+
+    Route::get('/bookings', function () {
+        $user_id = Auth::user()->id;
+        $guide = guide::with('user')->where('user_id', $user_id)->first();
+        $bookings = Booking::with('guide', 'tourist')->where('guide_id', $guide->id)->latest()->get();
+        return view('tourist.bookings', compact('bookings'));
+    });
+
+    Route::get('/bookings/{id}/cancel', [BookingController::class, 'cancel_booking']);
+    Route::get('/booking/{id}/accept', [BookingController::class, 'accept_booking']);
+    Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
 
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
@@ -202,6 +215,14 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         return view('tourist.dashboard');
     });
 
+    Route::get('/bookings', function () {
+        $user_id = Auth::user()->id;
+        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
+        $bookings = Booking::with('guide', 'tourist')->where('tourist_id', $tourist->id)->latest()->get();
+        return view('tourist.bookings', compact('bookings'));
+    });
+    Route::get('/bookings/{id}/cancel', [BookingController::class, 'cancel_booking']);
+    Route::get('/bookings/{id}/completed', [BookingController::class, 'completed_booking']);
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
 

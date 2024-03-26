@@ -92,7 +92,7 @@
         </li>
 
         <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link">
+            <a href="{{ url('/admin/bookings') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Booking">Booking</div>
             </a>

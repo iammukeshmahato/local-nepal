@@ -15,4 +15,14 @@ class Booking extends Model
         'end_date',
         'status',
     ];
+
+    public function guide()
+    {
+        return $this->belongsTo(Guide::class);
+    }
+
+    public function tourist()
+    {
+        return $this->belongsTo(Tourist::class);
+    }
 }
