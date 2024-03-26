@@ -63,7 +63,7 @@
 
                                             @if ($item->status == 'pending')
                                                 <a class="dropdown-item"
-                                                    href="{{ url('/' . Auth::user()->role . '/bookings/' . $item->id) . '/cancel' }}"><i
+                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/cancel' }}"><i
                                                         class="bx bx-trash me-1"></i>
                                                     Cancel</a>
                                                 @if (Auth::user()->role == 'guide')
@@ -74,7 +74,7 @@
                                                 @endif
                                             @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
                                                 <a class="dropdown-item"
-                                                    href="{{ url('/' . Auth::user()->role . '/bookings/' . $item->id) . '/completed' }}"><i
+                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}"><i
                                                         class="bx bx-trash me-1"></i>
                                                     Marked as Completed</a>
                                             @endif

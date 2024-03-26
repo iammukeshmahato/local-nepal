@@ -122,7 +122,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         return view('tourist.bookings', compact('bookings'));
     });
 
-    Route::get('/bookings/{id}/cancel', [BookingController::class, 'cancel_booking']);
+    Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
     Route::get('/booking/{id}/accept', [BookingController::class, 'accept_booking']);
     Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
 
@@ -221,8 +221,8 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         $bookings = Booking::with('guide', 'tourist')->where('tourist_id', $tourist->id)->latest()->get();
         return view('tourist.bookings', compact('bookings'));
     });
-    Route::get('/bookings/{id}/cancel', [BookingController::class, 'cancel_booking']);
-    Route::get('/bookings/{id}/completed', [BookingController::class, 'completed_booking']);
+    Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
+    Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
 
