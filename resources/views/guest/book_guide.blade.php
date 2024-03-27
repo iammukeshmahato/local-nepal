@@ -29,7 +29,7 @@
             color: rgb(24, 159, 14);
         }
 
-        .notice_action {
+        .delete_action {
             visibility: hidden;
             position: absolute;
             top: 0;
@@ -41,7 +41,7 @@
             align-items: center;
         }
 
-        .notice_action_btns {
+        .delete_action_btns {
             height: 100%;
             display: flex;
             justify-content: center;
@@ -50,7 +50,7 @@
             gap: 1rem;
         }
 
-        .card-body:hover .notice_action {
+        .card-body:hover .delete_action {
             visibility: visible;
         }
     </style>

@@ -29,7 +29,7 @@
             color: rgb(24, 159, 14);
         }
 
-        .notice_action {
+        .delete_action {
             visibility: hidden;
             position: absolute;
             top: 0;
@@ -41,7 +41,7 @@
             align-items: center;
         }
 
-        .notice_action_btns {
+        .delete_action_btns {
             height: 100%;
             display: flex;
             justify-content: center;
@@ -50,7 +50,7 @@
             gap: 1rem;
         }
 
-        .card-body:hover .notice_action {
+        .review:hover .delete_action {
             visibility: visible;
         }
     </style>
@@ -224,10 +224,11 @@
                         <h4 class="text-center mt-3">No reviews</h4>
                     @else
                         @foreach ($guide->reviews as $review)
-                            <div class="row py-2">
+                            <div class="row py-2 review">
                                 <div class="col-lg-2 d-flex justify-content-center align-items-top mb-4 mb-lg-0">
-                                    <img src="{{ asset('assets/img/profile.png') }}" class="rounded-circle shadow-1"
-                                        alt="woman avatar" width="100" height="100" style="object-fit: cover;" />
+                                    <img src="{{ asset('storage/profiles/' . $review->tourist->user->avatar) }}"
+                                        class="rounded-circle shadow-1" alt="woman avatar" width="100" height="100"
+                                        style="object-fit: cover;" />
                                 </div>
                                 <div class="col-lg-10 pe-5">
                                     <p class="fw-bold lead mb-2">
@@ -251,12 +252,12 @@
                                     <p class="text-muted fw-light">{{ $review->review }}</p>
 
                                     <p class="text-muted fw-light text-end mb-0">
-                                        Posted on: <i>{{ '2022 jan 1' }}</i>
+                                        Posted on: <i>{{ date('d-m-Y', strtotime($review->created_at)) }}</i>
                                     </p>
 
                                     @if (auth()->check() && auth()->user()->id == $review->tourist->user->id)
-                                        <div class="notice_action">
-                                            <div class="notice_action_btns">
+                                        <div class="delete_action">
+                                            <div class="delete_action_btns">
                                                 <a class="btn btn-danger w-100"
                                                     href="/guides/review/{{ base64_encode($review->id) }}/delete"
                                                     onclick="return confirm('Are you sure want to delete ?')">Delete</a>
@@ -275,7 +276,7 @@
         </div>
 
     </div>
- </div>
+    </div>
 @endsection
 @push('script')
     <script>
