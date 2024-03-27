@@ -109,129 +109,44 @@
     @endif
 
 
-    <div class="container py-5">
-        <h1 class="text-center mb-5">Popular Guides</h1>
-        <div class="row">
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
+    @if (!$guides->isEmpty())
+        <div class="container py-5">
+            <h1 class="text-center mb-5">Popular Guides</h1>
+            <div class="row">
+                @foreach ($guides as $item)
+                    <div class="col-md-4 col-ld-3 mb-5 guide">
+                        <div class="card mb-4">
+                            <img class="card-img-top"
+                                src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
+                                alt="Card image cap">
                         </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
-                        </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div>
+                                    <h5 class="guide-name">{{ $item->user->name }}</h5>
+                                    <h6 class="guide-rate">${{ $item->rate }}/hr</h6>
+                                </div>
+                                <div class="guide-star ms-5">
+                                    @for ($i = 0; $i < 5; $i++)
+                                        @if ($i <= round($item->reviews_avg_rating))
+                                            <i class='bx bxs-star'></i>
+                                        @endif
+                                    @endfor
+                                    <h6 class="mt-1">{{ count($item->reviews) }} Reviews</h6>
+                                </div>
+                                <div class="ms-4">
+                                    <h5>{{ $item->location }}</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+                <div class="d-flex justify-content-center">
+                    <a href="" class="btn btn-success text-black">View All</a>
                 </div>
-            </div>
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
-                        </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
-                        </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
-                        </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-ld-3 mb-5 guide">
-                <div class="card mb-4">
-                    <img class="card-img-top"
-                        src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                        alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div>
-                            <h5 class="guide-name">Mukesh Mahato</h5>
-                            <h6 class="guide-rate">$999</h6>
-                        </div>
-                        <div class="guide-star ms-5">
-                            <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                class='bx bx-star'></i><i class='bx bx-star'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-center">
-                <a href="" class="btn btn-success text-black">View All</a>
             </div>
         </div>
-    </div>
+    @endif
 
     <section>
         <h1 class="text-center mb-5">What our user say</h1>
