@@ -182,7 +182,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $user_id = Auth::user()->id;
         $guide = guide::with('user')->where('user_id', $user_id)->first();
         $bookings = Booking::with('guide', 'tourist')->where('guide_id', $guide->id)->latest()->get();
-        return view('tourist.bookings', compact('bookings'));
+        return view('guide.bookings', compact('bookings'));
     });
 
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
