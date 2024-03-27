@@ -19,4 +19,9 @@ class Tourist extends Model
     {
         return $this->belongsTo(User::class); // Belongs to a User
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class); // Has many Bookings
+    }
 }

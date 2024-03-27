@@ -20,6 +20,7 @@ use App\Models\Booking;
 use App\Models\GuideReview;
 use App\Models\Destination;
 use App\Models\DestinationReview;
+use App\Models\Message;
 use Illuminate\Pagination\Paginator;
 
 Route::get('/login', function () {
@@ -195,6 +196,45 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         return view('components.reviews', compact('reviews'));
     });
 
+    Route::get('/messages/{id?}', function ($id = null) {
+        $user = Auth::user();
+        $guide = Guide::where('user_id', $user->id)->first();
+
+        // dd($tourist->id);
+
+        // $clients = Tourist::with('user')->get();
+        $clients = Tourist::with('user', 'bookings')
+            ->whereHas('bookings', function ($query) use ($guide) {
+                $query->where('guide_id', $guide->id);
+            })
+            ->get();
+
+        $messages = Message::where(function ($query) use ($clients) {
+            $query->where('sender_id', $clients[0]->user->id)
+                ->Where('receiver_id', Auth::user()->id);
+        })->orWhere(function ($query) use ($clients) {
+            $query->where('sender_id', Auth::user()->id)
+                ->orWhere('receiver_id', $clients[0]->id);
+        })->get();
+
+        $receiver_id = $clients[0]->user->id;
+        if ($id) {
+            $receiver_id = $id;
+            $messages = Message::where(function ($query) use ($id) {
+                $query->where('sender_id', $id)
+                    ->Where('receiver_id', Auth::user()->id);
+            })->orWhere(function ($query) use ($id) {
+                $query->where('sender_id', Auth::user()->id)
+                    ->Where('receiver_id', $id);
+            })->get();
+            // dd($messages);
+            $receiver = Guide::where('user_id', $id)->first();
+            return view('admin.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
+        }
+
+
+        return view('admin.messages')->with(compact('clients', 'messages', 'receiver_id'));
+    });
 
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
@@ -300,6 +340,54 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         // dd($reviews);
         return view('components.reviews', compact('reviews'));
     });
+
+    Route::get('/messages/{id?}', function ($id = null) {
+        $user = Auth::user();
+        $tourist = Tourist::where('user_id', $user->id)->first();
+
+        // dd($tourist->id);
+
+        // $clients = Guide::with('user', 'bookings')->where('bookings.tourist_id', $tourist->id)->get();
+        $clients = Guide::with('user', 'bookings')
+            ->whereHas('bookings', function ($query) use ($tourist) {
+                $query->where('tourist_id', $tourist->id);
+            })
+            ->get();
+
+        // dd($clients);
+        $messages = Message::where(function ($query) use ($clients) {
+            $query->where('sender_id', $clients[0]->user->id)
+                ->Where('receiver_id', Auth::user()->id);
+        })->orWhere(function ($query) use ($clients) {
+            $query->where('sender_id', Auth::user()->id)
+                ->orWhere('receiver_id', $clients[0]->id);
+        })->get();
+
+
+        $receiver_id = $clients[0]->user->id;
+        if ($id) {
+            $receiver_id = $id;
+            $messages = Message::where(function ($query) use ($id) {
+                $query->where('sender_id', $id)
+                    ->Where('receiver_id', Auth::user()->id);
+            })->orWhere(function ($query) use ($id) {
+                $query->where('sender_id', Auth::user()->id)
+                    ->Where('receiver_id', $id);
+            })->get();
+            // dd($messages);
+            $receiver = Guide::where('user_id', $id)->first();
+            return view('admin.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
+        }
+
+        return view('admin.messages')->with(compact('clients', 'messages', 'receiver_id'));
+    });
+
+    Route::post('/message', function (Request $request) {
+        // dd($request->all());
+        Message::create($request->all());
+        return redirect()->back();
+    });
+
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
 
@@ -363,4 +451,12 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         Auth::logout();
         return redirect('/login');
     });
+});
+
+
+// testing
+
+Route::get('/message', function () {
+
+    return view('components.message');
 });

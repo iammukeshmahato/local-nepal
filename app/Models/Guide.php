@@ -33,6 +33,11 @@ class Guide extends Model
         return $this->hasMany(GuideReview::class); // Has many GuideReviews
     }
     
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class); // Has many Bookings
+    }
+
     protected static function boot()
     {
         parent::boot();
