@@ -49,7 +49,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     $destinations = Destination::with('reviews')->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(10)->get();
     $guides = Guide::with('reviews')->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(6)->get();
-    return view('guest.index')->with(compact('destinations', 'guides'));
+    $reviews = DestinationReview::orderByDesc('rating')->limit(6)->latest()->get();
+    return view('guest.index')->with(compact('destinations', 'guides', 'reviews'));
 });
 
 Route::resource('/guides', GuestGuideController::class);

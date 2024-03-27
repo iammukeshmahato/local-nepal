@@ -112,7 +112,7 @@
     @if (!$guides->isEmpty())
         <div class="container py-5">
             <h1 class="text-center mb-5">Popular Guides</h1>
-            <div class="row">
+            <div class="row d-flex justify-content-center">
                 @foreach ($guides as $item)
                     <div class="col-md-4 col-ld-3 mb-5 guide">
                         <div class="card mb-4">
@@ -141,65 +141,46 @@
                         </div>
                     </div>
                 @endforeach
-                <div class="d-flex justify-content-center">
-                    <a href="" class="btn btn-success text-black">View All</a>
-                </div>
+                @if (count($reviews) >= 6)
+                    <div class="d-flex justify-content-center">
+                        <a href="" class="btn btn-success text-black">View All</a>
+                    </div>
+                @endif
             </div>
         </div>
     @endif
 
-    <section>
-        <h1 class="text-center mb-5">What our user say</h1>
+    @if (!$reviews->isEmpty())
+        <section>
+            <h1 class="text-center mb-5">What our user say</h1>
 
-        <div class="reviews p-5 m-5 pb-0">
-            <div class="row justify-content-center">
+            <div class="reviews p-5 m-5 pb-0">
+                <div class="row justify-content-center">
 
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="card">
-                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
-                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
-                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
-                            eos aspernatur repellat ducimus autem.</span>
-                    </div>
-                    <div class="arrow-down"></div>
-                    <div class="profile">
-                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
-                        <span class="profile-name">Mukesh Mahato</span>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="card">
-                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
-                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
-                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
-                            eos aspernatur repellat ducimus autem.</span>
-                    </div>
-                    <div class="arrow-down"></div>
-                    <div class="profile">
-                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
-                        <span class="profile-name">Mukesh Mahato</span>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="card">
-                        <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
-                        <span class="post-txt">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae ea facere unde
-                            cum dicta. Animi impedit illo voluptates cumque quasi reprehenderit rem tempora provident quia,
-                            eos aspernatur repellat ducimus autem.</span>
-                    </div>
-                    <div class="arrow-down"></div>
-                    <div class="profile">
-                        <img class="profile-pic fit-image" src="{{ asset('assets/img/profile.png') }}" alt="...">
-                        <span class="profile-name">Mukesh Mahato</span>
-                    </div>
+                    @foreach ($reviews as $item)
+                        <div class="col-md-6 col-lg-4 mb-5">
+                            <div class="card">
+                                <p class="text-black quote m-0"><i class='bx bxs-quote-alt-left'></i></p>
+                                <span class="post-txt">{{ $item->review }}</span>
+                            </div>
+                            <div class="arrow-down"></div>
+                            <div class="profile">
+                                <img class="profile-pic fit-image" src="{{ asset('storage/profiies' . $item->avatar) }}"
+                                    alt="...">
+                                <span class="profile-name">{{ $item->user->name }}</span>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
 
-        <div class="d-flex justify-content-center">
-            <a href="" class="btn btn-success text-black">View All</a>
-        </div>
-    </section>
+            @if (count($reviews) >= 6)
+                <div class="d-flex justify-content-center">
+                    <a href="" class="btn btn-success text-black">View All</a>
+                </div>
+            @endif
+        </section>
+    @endif
 @endsection
 
 @push('script')
