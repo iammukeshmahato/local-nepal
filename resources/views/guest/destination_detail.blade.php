@@ -59,7 +59,7 @@
 @section('main-content')
     <div class="container py-5">
         <div class="card mx-4">
-            <h5 class="card-header text-center" style="font-size: 2rem;">{{ $destination->title }}</h5>
+            <h1 class="card-header text-center" style="font-size: 2rem;">{{ $destination->title }}</h1>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -68,11 +68,11 @@
                     </div>
                     <div class="col-md-6 mt-3">
                         <div class="col-md-6 mt-3">
-                            <h5 class="d-inline">Location:</h5>
+                            <strong class="d-inline">Location:</strong>
                             {!! $destination->location !!}
                         </div>
                         <div class="col-md-6 mt-3">
-                            <h5 class="d-inline">type:</h5>
+                            <strong class="d-inline">Type:</strong>
                             {!! $destination->type !!}
                         </div>
                         <div class="col mt-3">
@@ -165,7 +165,7 @@
 
                     </div>
                     <div class="col-md-12 mt-3">
-                        <h5>About</h5>
+                        <h2>About</h2>
                         {!! $destination->description !!}
                     </div>
                 </div>
@@ -175,7 +175,13 @@
 
         <div class="col mt-5 mx-4">
             <div class="card border-bottom" style="border: 0">
-                <h5 class="card-header text-center" style="font-size: 2rem;">Rating & Reviews</h5>
+                <h2 class="card-header text-center" style="font-size: 2rem;">Rating & Reviews</h2>
+
+                <div class="d-flex justify-content-end me-4">
+                    <a href="{{ url('/destinations/' . $destination->slug) . '/review' }}" class="btn btn-primary">Write
+                        Your Opinion</a>
+                </div>
+
                 <div class="card-body p-0">
                     @if (count($destination->reviews) == 0)
                         <h4 class="text-center mt-3">No reviews</h4>

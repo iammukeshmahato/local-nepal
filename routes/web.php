@@ -19,6 +19,7 @@ use App\Http\Controllers\admin\BookingController;
 use App\Models\Booking;
 use App\Models\GuideReview;
 use App\Models\Destination;
+use App\Models\DestinationReview;
 use Illuminate\Pagination\Paginator;
 
 Route::get('/login', function () {
@@ -72,6 +73,35 @@ Route::get('/destinations/{slug}', function (string $slug) {
     //     return view('guest.destination_detail', compact('destination', 'reviews'));
     // }
     return view('guest.destination_detail', compact('destination'));
+});
+
+Route::get('/destinations/{slug}/review', function (string $slug) {
+    $destination = Destination::where('slug', $slug)->first();
+    return view('guest.review_destination', compact('destination'));
+});
+
+Route::post('/destinations/{slug}/review', function (Request $request, string $slug) {
+
+    if (!Auth::check()) {
+        abort(403, 'Login to add review');
+        session()->flash('error', 'You need to login to add review');
+        return redirect('login');
+    }
+
+    $is_already_reviewed = DestinationReview::where('user_id', Auth::user()->id)->first() ? true : false;
+    if ($is_already_reviewed) {
+        session()->flash('error', 'You have already reviewed this guide');
+        return redirect()->back();
+    }
+
+    $destination = Destination::find($request->destination_id);
+    $request->validate([
+        'rating' => 'required',
+        'review' => 'required | string ',
+    ]);
+    $destination->reviews()->create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
+    session()->flash('success', 'Review added successfully');
+    return redirect('destinations/' . $slug);
 });
 
 // admin routes

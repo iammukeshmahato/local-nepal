@@ -1,6 +1,6 @@
 @extends('guest.layouts.main')
 @push('title')
-    <title>Home | LocalNepal</title>
+    <title>Guides | LocalNepal</title>
 @endpush
 @push('links')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -9,7 +9,7 @@
 @endpush
 @section('main-content')
     <div class="container py-5">
-        <h1 class="text-center mb-5">Popular Guides</h1>
+        <h1 class="text-center mb-5">Guides</h1>
         <div class="row">
             @foreach ($guides as $guide)
                 <div class="col-md-4 col-ld-3 mb-5 guide position-relative">
