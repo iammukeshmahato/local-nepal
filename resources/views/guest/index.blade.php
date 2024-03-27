@@ -127,7 +127,7 @@
                                     <h6 class="guide-rate">${{ $item->rate }}/hr</h6>
                                 </div>
                                 <div class="guide-star ms-5">
-                                    @for ($i = 0; $i < 5; $i++)
+                                    @for ($i = 1; $i <= 5; $i++)
                                         @if ($i <= round($item->reviews_avg_rating))
                                             <i class='bx bxs-star'></i>
                                         @endif
@@ -138,6 +138,7 @@
                                     <h5>{{ $item->location }}</h5>
                                 </div>
                             </div>
+                            <a href="{{ url('/guides/' . base64_encode($item->id)) }}" class="stretched-link"></a>
                         </div>
                     </div>
                 @endforeach
@@ -165,8 +166,8 @@
                             </div>
                             <div class="arrow-down"></div>
                             <div class="profile">
-                                <img class="profile-pic fit-image" src="{{ asset('storage/profiies' . $item->avatar) }}"
-                                    alt="...">
+                                <img class="profile-pic fit-image"
+                                    src="{{ asset('storage/profiles/' . $item->user->avatar) }}" alt="...">
                                 <span class="profile-name">{{ $item->user->name }}</span>
                             </div>
                         </div>
