@@ -18,6 +18,8 @@ use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
 use App\Models\Booking;
 use App\Models\GuideReview;
+use App\Models\Destination;
+use Illuminate\Pagination\Paginator;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -52,6 +54,25 @@ Route::get('/guides/{id}/book', [GuestGuideController::class, 'book_guide_form']
 Route::post('/guides/{id}/book', [GuestGuideController::class, 'book_guide']);
 Route::post('/guides/{id}/rate', [GuestGuideController::class, 'review_guide']);
 Route::get('/guides/review/{id}/delete', [GuestGuideController::class, 'delete_guide_review']);
+Route::get('/destinations', function () {
+    Paginator::useBootstrap();
+    $perPage = 6;
+    $destinations = Destination::paginate($perPage);
+    return view('guest.destinations', compact('destinations'));
+});
+
+Route::get('/destinations/{slug}', function (string $slug) {
+
+    // Paginator::useBootstrap();
+    // $perPage = 10;
+    $destination = Destination::with('reviews')->where('slug', $slug)->first();
+    // if ($destination) {
+    //     $reviews = $destination->reviews()->paginate($perPage);
+    //     dd($reviews);
+    //     return view('guest.destination_detail', compact('destination', 'reviews'));
+    // }
+    return view('guest.destination_detail', compact('destination'));
+});
 
 // admin routes
 Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAuth::class]], function () {

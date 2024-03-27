@@ -10,4 +10,9 @@ class Destination extends Model
     use HasFactory;
 
     protected $fillable = ['title', 'description', 'cover_image', 'location', 'type', 'slug'];
+
+    public function reviews()
+    {
+        return $this->hasMany(DestinationReview::class);
+    }
 }
