@@ -88,7 +88,7 @@ Route::post('/destinations/{slug}/review', function (Request $request, string $s
         return redirect('login');
     }
 
-    $is_already_reviewed = DestinationReview::where('user_id', Auth::user()->id)->first() ? true : false;
+    $is_already_reviewed = DestinationReview::where('user_id', Auth::user()->id)->where('destination_id', $request->destination_id)->first() ? true : false;
     if ($is_already_reviewed) {
         session()->flash('error', 'You have already reviewed this guide');
         return redirect()->back();

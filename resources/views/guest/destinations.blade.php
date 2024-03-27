@@ -26,7 +26,9 @@
                             <div class="guide-star ms-5">
                                 <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
                                     class='bx bx-star'></i><i class='bx bx-star'></i>
+                                <h6 class="text-muted mt-1">{{ count($destination->reviews) }} Reviews</h6>
                             </div>
+
                         </div>
                     </div>
                     <a href="{{ url('/destinations/' . $destination->slug) }}" class="stretched-link"></a>

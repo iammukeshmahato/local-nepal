@@ -9,7 +9,7 @@
 @endpush
 
 @section('main-content')
-    <form action="{{ url('/admin/destination') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url('/admin/destinations') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="col-md-12">
             <div class="card mb-4">
