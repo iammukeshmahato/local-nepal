@@ -70,77 +70,43 @@
         </div>
     </section>
 
-    <section>
-        <div class="container">
-            <h1 class="text-center mb-5">Popular Destinations</h1>
+    @if (!$destinations->isEmpty() && count($destinations) >= 3)
+        <section>
+            <div class="container">
+                <h1 class="text-center mb-5">Popular Destinations</h1>
 
-            <main>
-                <div class="slider-container">
-                    <div class="swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1529733905113-027ed85d7e33"
-                                        alt="..." />
-                                    <p class="overlay">
-                                        Hiking
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1554710869-95f3df6a3197" alt="..." />
-                                    <p class="overlay">
-                                        Hiking
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1554710869-95f3df6a3197" alt="..." />
-
-                                    <p class="overlay">
-                                        Hiking
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1602102488252-c4c3daadf1c2"
-                                        alt="..." />
-
-                                    <p class="overlay">
-                                        Hiking
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1623492701360-fb4a1205c789"
-                                        alt="..." />
-                                    <p class="overlay">
-                                        Hiking
-                                    </p>
-                                </div>
+                <main>
+                    <div class="slider-container">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                @foreach ($destinations as $item)
+                                    <div class="swiper-slide">
+                                        <div>
+                                            <img src="{{ asset('storage/destinations/' . $item->cover_image) }}"
+                                                alt="..." />
+                                            <p class="overlay">
+                                                {{ $item->title }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
-                    </div>
 
-                    <div class="button-prev">
-                        <img src="https://img.icons8.com/ios/50/000000/chevron-left.png" alt="" />
-                        <p>Back</p>
+                        <div class="button-prev">
+                            <img src="https://img.icons8.com/ios/50/000000/chevron-left.png" alt="" />
+                            <p>Back</p>
+                        </div>
+                        <div class="button-next">
+                            <img src="https://img.icons8.com/ios/50/000000/chevron-right.png" alt="" />
+                            <p>Next</p>
+                        </div>
                     </div>
-                    <div class="button-next">
-                        <img src="https://img.icons8.com/ios/50/000000/chevron-right.png" alt="" />
-                        <p>Next</p>
-                    </div>
-                </div>
-            </main>
+                </main>
 
-        </div>
-    </section>
+            </div>
+        </section>
+    @endif
 
 
     <div class="container py-5">
@@ -340,7 +306,8 @@
                     slidesPerView: 3,
                 },
                 1024: {
-                    slidesPerView: 4,
+                    slidesPerView: 1,
+                    slidesPerView: {{ count($destinations) >= 4 ? 4 : count($destinations) }},
                 },
             },
 
