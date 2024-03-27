@@ -208,7 +208,9 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
                 $query->where('guide_id', $guide->id);
             })
             ->get();
-
+        if (count($clients) == 0) {
+            abort(404, 'No messages');
+        }
         $messages = Message::where(function ($query) use ($clients) {
             $query->where('sender_id', $clients[0]->user->id)
                 ->Where('receiver_id', Auth::user()->id);
@@ -229,11 +231,11 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
             })->get();
             // dd($messages);
             $receiver = Guide::where('user_id', $id)->first();
-            return view('admin.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
+            return view('guide.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
         }
 
 
-        return view('admin.messages')->with(compact('clients', 'messages', 'receiver_id'));
+        return view('guide.messages')->with(compact('clients', 'messages', 'receiver_id'));
     });
 
     Route::post('/update-profile', function (Request $request) {
@@ -355,6 +357,9 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             ->get();
 
         // dd($clients);
+        if (count($clients) == 0) {
+            abort(404, 'No messages');
+        }
         $messages = Message::where(function ($query) use ($clients) {
             $query->where('sender_id', $clients[0]->user->id)
                 ->Where('receiver_id', Auth::user()->id);
@@ -376,10 +381,10 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             })->get();
             // dd($messages);
             $receiver = Guide::where('user_id', $id)->first();
-            return view('admin.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
+            return view('tourist.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
         }
 
-        return view('admin.messages')->with(compact('clients', 'messages', 'receiver_id'));
+        return view('tourist.messages')->with(compact('clients', 'messages', 'receiver_id'));
     });
 
     Route::post('/message', function (Request $request) {

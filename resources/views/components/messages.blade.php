@@ -1,7 +1,3 @@
-@extends('admin.layouts.main')
-@push('title')
-    <title>Messages - Admin | LocalNepal</title>
-@endpush
 @push('links')
     <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/app-chat.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
@@ -156,6 +152,7 @@
 @endsection
 
 @push('script')
+    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('assets/js/chat.js') }}"></script>
