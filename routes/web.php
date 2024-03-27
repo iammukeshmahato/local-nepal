@@ -70,7 +70,7 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
 
     Route::get('/tourist', [TouristController::class, 'index']);
 
-    Route::resource('/destination', DestinationController::class);
+    Route::resource('/destinations', DestinationController::class);
 
     Route::get('/reviews', function () {
         $reviews = GuideReview::with('guide', 'tourist')->latest()->get();

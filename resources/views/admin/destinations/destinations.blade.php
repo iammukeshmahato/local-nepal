@@ -41,20 +41,20 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ url('/admin/destination/' . $item->id) }}"><i
+                                            <a class="dropdown-item" href="{{ url('/admin/destinations/' . $item->id) }}"><i
                                                     class="bx bx-edit-alt me-1"></i>
                                                 View</a>
 
                                             <a class="dropdown-item"
-                                                href="{{ url('/admin/destination/' . $item->id . '/edit') }}"><i
+                                                href="{{ url('/admin/destinations/' . $item->id . '/edit') }}"><i
                                                     class="bx bx-edit-alt me-1"></i>
                                                 Edit</a>
 
-                                            <form action="{{ url('/admin/destination/' . $item->id) }}" method="post">
+                                            <form action="{{ url('/admin/destinations/' . $item->id) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="dropdown-item" href="javascript:void(0);"
-                                                    onclick="confirm('Are you sure want to delete?')"><i
+                                                    onclick="return confirm('Are you sure want to delete?')"><i
                                                         class="bx bx-trash me-1"></i>
                                                     Delete</button>
                                             </form>

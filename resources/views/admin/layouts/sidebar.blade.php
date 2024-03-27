@@ -79,12 +79,12 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="{{ url('/admin/destination/create') }}" class="menu-link">
+                    <a href="{{ url('/admin/destinations/create') }}" class="menu-link">
                         <div data-i18n="Add Destination">Add Destination</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="{{ url('/admin/destination') }}" class="menu-link">
+                    <a href="{{ url('/admin/destinations') }}" class="menu-link">
                         <div data-i18n="View Destination">View Destination</div>
                     </a>
                 </li>
