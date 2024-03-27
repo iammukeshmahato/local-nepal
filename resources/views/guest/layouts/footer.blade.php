@@ -21,12 +21,12 @@
             <ul>
                 <li>
                     <i class='bx bxs-phone'></i>
-                    <a href="tel:+97714200837" class="text-decoration-none">+977 14200837</a>
+                    <a href="tel:+9779800000000" class="text-decoration-none">+977 9800000000</a>
                 </li>
                 <li>
                     <i class='bx bxs-envelope'></i>
-                    <a href="mailto:info@nepalbarassociation.org.np"
-                        class="text-decoration-none">info@nepalbarassociation.org.np</a>
+                    <a href="mailto:contact@mukeshmahato.com.np"
+                        class="text-decoration-none">contact@mukeshmahato.com.np</a>
                 </li>
                 <li>
                     <i class='bx bxs-map'></i>
