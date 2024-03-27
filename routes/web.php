@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
 use App\Models\Booking;
+use App\Models\GuideReview;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -70,6 +71,12 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/tourist', [TouristController::class, 'index']);
 
     Route::resource('/destination', DestinationController::class);
+
+    Route::get('/reviews', function () {
+        $reviews = GuideReview::with('guide', 'tourist')->latest()->get();
+        return view('components.reviews', compact('reviews'));
+    });
+
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/update-password', function () {
         return view('admin.update_password');
@@ -126,6 +133,14 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
     Route::get('/booking/{id}/accept', [BookingController::class, 'accept_booking']);
     Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
+
+    Route::get('/reviews', function () {
+        $user_id = Auth::user()->id;
+        $guide = Guide::with('user')->where('user_id', $user_id)->first();
+        $reviews = $guide->reviews;
+        return view('components.reviews', compact('reviews'));
+    });
+
 
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
@@ -224,6 +239,13 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     });
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
     Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
+    Route::get('/reviews', function () {
+        $user_id = Auth::user()->id;
+        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
+        $reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->get();
+        // dd($reviews);
+        return view('components.reviews', compact('reviews'));
+    });
     Route::post('/update-profile', function (Request $request) {
         $user = Auth::user();
 

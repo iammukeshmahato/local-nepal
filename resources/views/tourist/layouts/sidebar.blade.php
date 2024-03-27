@@ -31,7 +31,7 @@
         </li>
 
         <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link">
+            <a href="{{ url('/tourist/reviews') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Reviews">Reviews</div>
             </a>
