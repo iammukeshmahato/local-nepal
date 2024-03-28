@@ -78,6 +78,7 @@
                 <form action="{{ url('/guides/' . base64_encode($guide->id) . '/book') }}" method="POST">
                     @csrf
                     <input type="hidden" name="guide_id" value="{{ $guide->id }}">
+                    <input type="hidden" name="total_cost" id="total_cost_input">
                     <div class="card mt-4">
                         <div class="card-body row">
                             <div class="mb-3 col-md-6">
@@ -114,7 +115,21 @@
                                         <img src="{{ asset('assets/img/payments/khalti.jpg') }}" alt="visa-card"
                                             width="58" data-app-light-img="icons/payments/visa-light.png"
                                             data-app-dark-img="icons/payments/visa-dark.png">
-                                        <span class="ms-3">Khalti Wallet</span>
+                                        {{-- <span class="ms-3">Khalti Wallet</span> --}}
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label
+                                    class="form-check-label custom-option-content form-check-input-payment d-flex gap-3 align-items-center"
+                                    for="stripe">
+                                    <input name="payment" class="form-check-input" type="radio" value="stripe"
+                                        id="stripe" checked="" onclick="payment_method()">
+                                    <span class="custom-option-body">
+                                        <img src="{{ asset('assets/img/payments/stripe.jpg') }}" alt="visa-card"
+                                            width="58" data-app-light-img="icons/payments/visa-light.png"
+                                            data-app-dark-img="icons/payments/visa-dark.png">
+                                        {{-- <span class="ms-3">Stripe</span> --}}
                                     </span>
                                 </label>
                             </div>
@@ -129,7 +144,7 @@
                                         <img src="{{ asset('assets/img/payments/cash.jpg') }}" alt="visa-card"
                                             width="58" data-app-light-img="icons/payments/visa-light.png"
                                             data-app-dark-img="icons/payments/visa-dark.png">
-                                        <span class="ms-3">By Cash</span>
+                                        {{-- <span class="ms-3">By Cash</span> --}}
                                     </span>
                                 </label>
                             </div>
@@ -196,6 +211,8 @@
                     cost = Math.ceil(Math.abs(days * rate_day));
                 }
             }
+            document.getElementById('total_cost_input').value = cost;
+            console.log(cost, document.getElementById('total_cost_input').value);
             total_cost.innerText = `$${cost}`;
         }
 
@@ -206,6 +223,10 @@
                 submit_btn.value = 'Pay by Khalti';
                 document.querySelector('form').setAttribute('action',
                     "{{ url('/payment/khalti') }}");
+            } else if (payment == 'stripe') {
+                submit_btn.value = 'Pay by Stripe';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/payment/stripe') }}");
             } else {
                 submit_btn.value = 'Pay by Cash';
                 document.querySelector('form').setAttribute('action',

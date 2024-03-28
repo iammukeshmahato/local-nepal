@@ -22,6 +22,7 @@ use App\Models\Destination;
 use App\Models\DestinationReview;
 use App\Models\Message;
 use Illuminate\Pagination\Paginator;
+use App\Http\Controllers\StripePaymentController;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -465,3 +466,8 @@ Route::get('/message', function () {
 
     return view('components.message');
 });
+
+
+Route::post('/payment/stripe', [StripePaymentController::class, 'payment']);
+Route::get('/payment/stripe/success', [StripePaymentController::class, 'success']);
+Route::get('/payment/stripe/cancel', [StripePaymentController::class, 'cancel']);
