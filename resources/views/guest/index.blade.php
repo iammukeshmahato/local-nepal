@@ -80,7 +80,7 @@
                         <div class="swiper">
                             <div class="swiper-wrapper">
                                 @foreach ($destinations as $item)
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide position-relative">
                                         <div>
                                             <img src="{{ asset('storage/destinations/' . $item->cover_image) }}"
                                                 alt="..." />
@@ -88,6 +88,7 @@
                                                 {{ $item->title }}
                                             </p>
                                         </div>
+                                        <a href="{{ url('/destinations/' . $item->slug) }}" class="stretched-link"></a>
                                     </div>
                                 @endforeach
                             </div>

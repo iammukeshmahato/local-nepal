@@ -186,13 +186,12 @@
                     @if (count($destination->reviews) == 0)
                         <h4 class="text-center mt-3">No reviews</h4>
                     @else
-                        {{-- @if ($reviews->hasPages()) --}}
                         @foreach ($destination->reviews as $review)
                             <div class="row py-2 review">
                                 <div class="col-lg-2 d-flex justify-content-center align-items-top mb-4 mb-lg-0">
                                     <img src="{{ asset('storage/profiles/' . $review->user->avatar) }}"
-                                        class="rounded-circle shadow-1" alt="woman avatar" width="100" height="100"
-                                        style="object-fit: cover;" />
+                                        class="rounded-circle shadow-1" alt="{{ $review->user->name }}" width="100"
+                                        height="100" style="object-fit: cover;" />
                                 </div>
                                 <div class="col-lg-10 pe-5">
                                     <p class="fw-bold lead mb-2">
@@ -209,9 +208,7 @@
                                             @endfor
                                         </li>
                                         </li>
-                                        {{-- {% endfor %} --}}
                                         </li>
-                                        {{-- {% endfor %} --}}
                                     </ul>
                                     <p class="text-muted fw-light">{{ $review->review }}</p>
 
