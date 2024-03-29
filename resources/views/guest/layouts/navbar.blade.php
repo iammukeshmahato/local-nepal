@@ -12,6 +12,8 @@
             </div>
             <div class="navbar-nav">
                 <a class="nav-item nav-link active" href="{{ url('/') }}">Home</a>
+                <a class="nav-item nav-link" href="{{ url('/destinations') }}">Destination</a>
+                <a class="nav-item nav-link" href="{{ url('/guides') }}">Guide</a>
                 <a class="nav-item nav-link" href="{{ url('/') }}">About</a>
                 <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a>&nbsp;&nbsp;&nbsp;
                 @if (auth()->check())

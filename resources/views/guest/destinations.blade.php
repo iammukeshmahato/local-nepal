@@ -19,11 +19,11 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex">
-                            <div>
+                            <div class="col-md-8">
                                 <h5 class="guide-name">{{ $destination->title }}</h5>
                                 <h6 class="text-muted">{{ $destination->type }}</h6>
                             </div>
-                            <div class="guide-star ms-5">
+                            <div class="guide-star col-md-4">
                                 <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
                                     class='bx bx-star'></i><i class='bx bx-star'></i>
                                 <h6 class="text-muted mt-1">{{ count($destination->reviews) }} Reviews</h6>

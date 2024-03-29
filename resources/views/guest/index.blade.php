@@ -114,11 +114,10 @@
             <h1 class="text-center mb-5">Popular Guides</h1>
             <div class="row d-flex justify-content-center">
                 @foreach ($guides as $item)
-                    <div class="col-md-4 col-ld-3 mb-5 guide">
+                    <div class="col-md-4 col-ld-3 mb-5 guide position-relative">
                         <div class="card mb-4">
-                            <img class="card-img-top"
-                                src="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/img/elements/5.jpg"
-                                alt="Card image cap">
+                            <img class="card-img-top" src="{{ asset('storage/profiles/' . $item->user->avatar) }}"
+                                alt="{{ $item->user->avatar }}">
                         </div>
                         <div class="card-body">
                             <div class="d-flex">
@@ -126,25 +125,29 @@
                                     <h5 class="guide-name">{{ $item->user->name }}</h5>
                                     <h6 class="guide-rate">${{ $item->rate }}/hr</h6>
                                 </div>
-                                <div class="guide-star ms-5">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= round($item->reviews_avg_rating))
-                                            <i class='bx bxs-star'></i>
-                                        @endif
-                                    @endfor
-                                    <h6 class="mt-1">{{ count($item->reviews) }} Reviews</h6>
-                                </div>
+                                @if (count($item->reviews) > 0)
+                                    <div class="guide-star ms-5">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= round($item->reviews_avg_rating))
+                                                <i class='bx bxs-star'></i>
+                                            @else
+                                                <i class='bx bx-star'></i>
+                                            @endif
+                                        @endfor
+                                        <h6 class="mt-1">{{ count($item->reviews) }} Reviews</h6>
+                                    </div>
+                                @endif
                                 <div class="ms-4">
                                     <h5>{{ $item->location }}</h5>
                                 </div>
                             </div>
-                            <a href="{{ url('/guides/' . base64_encode($item->id)) }}" class="stretched-link"></a>
                         </div>
+                        <a href="{{ url('/guides/' . base64_encode($item->id)) }}" class="stretched-link"></a>
                     </div>
                 @endforeach
-                @if (count($reviews) >= 6)
+                @if (count($guides) >= 6)
                     <div class="d-flex justify-content-center">
-                        <a href="" class="btn btn-success text-black">View All</a>
+                        <a href="{{ url('/guides') }}" class="btn btn-success text-black">View All</a>
                     </div>
                 @endif
             </div>
