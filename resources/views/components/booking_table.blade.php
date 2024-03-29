@@ -72,7 +72,7 @@
                                             @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
                                                 <a class="dropdown-item"
                                                     href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}">
-                                                    <i class="bx bx-trash me-1"></i>
+                                                    <i class='menu-icon tf-icons bx bx-check me-1'></i>
                                                     Marked as Completed</a>
                                             @elseif($item->status == 'completed' && Auth::user()->role == 'tourist')
                                                 <a class="dropdown-item"

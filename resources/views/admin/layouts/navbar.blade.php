@@ -52,7 +52,7 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="{{ url('/logout') }}">
-                            <i class="bx bx-power-off me-2"></i>
+                            <i class="menu-icon tf-icons bx bx-log-out"></i>
                             <span class="align-middle">Log Out</span>
                         </a>
                     </li>

@@ -25,14 +25,14 @@
         @if ($tourist)
             <li class="menu-item">
                 <a href="{{ url('/tourist/messages') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <i class='menu-icon tf-icons bx bx-chat'></i>
                     <div data-i18n="Messages">Messages</div>
                 </a>
             </li>
 
             <li class="menu-item">
                 <a href="{{ url('/tourist/reviews') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <i class="menu-icon tf-icons bx bx-star"></i>
                     <div data-i18n="Reviews">Reviews</div>
                 </a>
             </li>
@@ -48,21 +48,21 @@
         @if ($tourist)
             <li class="menu-item">
                 <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-collection"></i>
+                    <i class="menu-icon tf-icons bx bx-user"></i>
                     <div data-i18n="Basic">Profile</div>
                 </a>
             </li>
         @endif
         <li class="menu-item">
             <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <i class="menu-icon tf-icons bx bx-lock"></i>
                 <div data-i18n="Basic">Update Password</div>
             </a>
         </li>
 
         <li class="menu-item">
             <a href="{{ url('/logout') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <i class="menu-icon tf-icons bx bx-log-out"></i>
                 <div data-i18n="Basic">Logout</div>
             </a>
         </li>

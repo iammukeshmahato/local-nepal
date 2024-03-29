@@ -48,8 +48,8 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ url('/admin/guide/' . $guide->id) }}"><i
-                                                    class="bx bx-edit-alt me-1"></i>
+                                            <a class="dropdown-item" href="{{ url('/admin/guide/' . $guide->id) }}">
+                                                <i class='bx bx-show me-1'></i>
                                                 View</a>
                                             @if ($guide->status == 'pending')
                                                 <a class="dropdown-item"
@@ -118,5 +118,6 @@
                 </tbody>
             </table>
         </div>
+        {{-- <div class="d-flex justify-content-center mt-3">{{ $guides->links() }} </div> --}}
     </div>
 @endsection

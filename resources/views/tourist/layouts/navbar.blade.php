@@ -51,10 +51,10 @@
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>
-                    
+
                     <li>
                         <a class="dropdown-item" href="{{ url('/tourist/profile') }}">
-                            <i class="bx bx-user me-2"></i>
+                            <i class="menu-icon tf-icons bx bx-user me-2"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
                     </li>
@@ -63,7 +63,7 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="{{ url('/logout') }}">
-                            <i class="bx bx-power-off me-2"></i>
+                            <i class="menu-icon tf-icons bx bx-log-out"></i>
                             <span class="align-middle">Log Out</span>
                         </a>
                     </li>

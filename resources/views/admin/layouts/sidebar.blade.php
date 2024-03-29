@@ -20,7 +20,7 @@
 
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <i class="menu-icon tf-icons bx bx-group"></i>
                 <div data-i18n="Guide">Guide</div>
             </a>
             <ul class="menu-sub">
@@ -45,7 +45,7 @@
 
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <i class="menu-icon tf-icons bx bx-universal-access"></i>
                 <div data-i18n="Trouist">Trouist</div>
             </a>
             <ul class="menu-sub">
@@ -59,14 +59,14 @@
 
         <li class="menu-item">
             <a href="{{ url('/admin/reviews') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon tf-icons bx bx-star"></i>
                 <div data-i18n="Reviews">Reviews</div>
             </a>
         </li>
 
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <i class="menu-icon tf-icons bx bx-location-plus"></i>
                 <div data-i18n="Destinations">Destinations</div>
             </a>
             <ul class="menu-sub">
@@ -93,14 +93,14 @@
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Setting</span></li>
         <li class="menu-item">
             <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <i class="menu-icon tf-icons bx bx-lock"></i>
                 <div data-i18n="Basic">Update Password</div>
             </a>
         </li>
 
         <li class="menu-item">
             <a href="{{ url('/logout') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <i class="menu-icon tf-icons bx bx-log-out"></i>
                 <div data-i18n="Basic">Logout</div>
             </a>
         </li>
