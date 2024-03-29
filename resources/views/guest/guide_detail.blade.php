@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="col-md-4 border-5">
-                <h3 class="text-center mt-3">Rate Us</h3>
+                <h3 class="text-center mt-3" id="review">Rate Us</h3>
                 <form action="{{ url('/guides/' . base64_encode($guide->id)) . '/rate' }}" method="post" id="rating-from">
                     @csrf
                     <div class="stars text-center mb-5">

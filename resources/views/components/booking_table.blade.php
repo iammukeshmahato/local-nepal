@@ -57,26 +57,28 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);"><i
-                                                    class="bx bx-trash me-1"></i>
-                                                View</a>
-
+                                            <a class="dropdown-item" href="javascript:void(0);">
+                                                <i class="bx bx-trash me-1"></i>View</a>
                                             @if ($item->status == 'pending')
                                                 <a class="dropdown-item"
-                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/cancel' }}"><i
-                                                        class="bx bx-trash me-1"></i>
+                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/cancel' }}">
+                                                    <i class="bx bx-trash me-1"></i>
                                                     Cancel</a>
                                                 @if (Auth::user()->role == 'guide')
                                                     <a class="dropdown-item"
-                                                        href="{{ url('/guide/booking/' . $item->id . '/accept') }}"><i
-                                                            class="bx bx-trash me-1"></i>
-                                                        Accept</a>
+                                                        href="{{ url('/guide/booking/' . $item->id . '/accept') }}">
+                                                        <i class="bx bx-trash me-1"></i>Accept</a>
                                                 @endif
                                             @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
                                                 <a class="dropdown-item"
-                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}"><i
-                                                        class="bx bx-trash me-1"></i>
+                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}">
+                                                    <i class="bx bx-trash me-1"></i>
                                                     Marked as Completed</a>
+                                            @elseif($item->status == 'completed' && Auth::user()->role == 'tourist')
+                                                <a class="dropdown-item"
+                                                    href="{{ url('/guides/' . base64_encode($item->guide->id) . '#review') }}"><i
+                                                        class="bx bx-trash me-1"></i>
+                                                    Rate Us</a>
                                             @endif
                                         </div>
                                     </div>

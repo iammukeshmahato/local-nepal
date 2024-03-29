@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('booking_id');
             $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->string('session_id');
+            $table->string('session_id')->nullable();
             $table->decimal('amount', 10, 2);
             $table->enum('payment_method', ['stripe', 'khalti', 'cash'])->default('cash');
             $table->enum('payment_status', ['paid', 'unpaid'])->default('unpaid');

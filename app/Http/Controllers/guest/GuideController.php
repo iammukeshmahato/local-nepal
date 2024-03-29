@@ -94,6 +94,12 @@ class GuideController extends Controller
         $user_id = Auth::user()->id;
         $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
         $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
+        $booking->transactions()->create([
+            'booking_id' => $booking->id,
+            'amount' => $request->total_cost,
+            'payment_method' => 'cash',
+            'payment_status' => 'unpaid',
+        ]);
         session()->flash('success', 'Booking successful');
         return redirect('/guides/' . base64_encode($booking->guide_id));
     }
