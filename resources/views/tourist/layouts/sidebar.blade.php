@@ -11,7 +11,7 @@
 
     <ul class="menu-inner py-1 mt-4">
         <!-- Dashboards -->
-        <li class="menu-item active open">
+        <li class="menu-item">
             <a href="{{ url('/' . Auth::user()->role . '/dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Dashboards">Dashboard</div>

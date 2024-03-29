@@ -10,16 +10,60 @@
         <div class="collapse navbar-collapse" id="navbar-ex-3">
             <div class="navbar-nav me-auto">
             </div>
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="{{ url('/') }}">Home</a>
+            <div class="navbar-nav align-items-center">
+                <a class="nav-item nav-link" href="{{ url('/') }}">Home</a>
                 <a class="nav-item nav-link" href="{{ url('/destinations') }}">Destination</a>
                 <a class="nav-item nav-link" href="{{ url('/guides') }}">Guide</a>
                 <a class="nav-item nav-link" href="{{ url('/') }}">About</a>
-                <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a>&nbsp;&nbsp;&nbsp;
+                <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a>
                 @if (auth()->check())
-                    <a class="nav-item nav-link" href="{{ url('/') }}">{{ auth()->user()->role }}</a>
-                    <a href="{{ url('/logout') }}"><button class="btn btn-outline-primary"
-                            type="button">Logout</button></a>
+                    <ul class="navbar-nav flex-row align-items-center ms-auto">
+                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                            <a class="nav-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <div class="avatar">
+                                    <img src="{{ asset('assets/img/profile.png') }}" alt
+                                        class="w-px-40 h-auto rounded-circle" />
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar">
+                                                    <img src="{{ asset('assets/img/profile.png') }}" alt
+                                                        class="w-px-40 h-auto rounded-circle" />
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <span class="fw-medium d-block">{{ Auth::user()->name }}</span>
+                                                <small
+                                                    class="text-muted text-capitalize">{{ Auth::user()->role }}</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url('/' . Auth::user()->role . '/dashboard') }}">
+                                        <i class='bx bxs-dashboard me-2'></i>
+                                        <span class="align-middle">Dashboard</span>
+                                    </a>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url('/logout') }}">
+                                        <i class="bx bx-power-off me-2"></i>
+                                        <span class="align-middle">Log Out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--/ User -->
+                    </ul>
                 @else
                     <a href="{{ url('/login') }}"><button class="btn btn-outline-primary"
                             type="button">Login/Register</button></a>
