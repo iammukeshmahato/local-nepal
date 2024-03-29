@@ -18,40 +18,41 @@
             </a>
         </li>
         @php
-            $guide = DB::table('guides')
+            $tourist = DB::table('tourists')
                 ->where('user_id', Auth::user()->id)
                 ->first();
         @endphp
-        <li class="menu-item">
-            <a href="{{ url('/tourist/messages') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Messages">Messages</div>
-            </a>
-        </li>
+        @if ($tourist)
+            <li class="menu-item">
+                <a href="{{ url('/tourist/messages') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <div data-i18n="Messages">Messages</div>
+                </a>
+            </li>
 
-        <li class="menu-item">
-            <a href="{{ url('/tourist/reviews') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Reviews">Reviews</div>
-            </a>
-        </li>
+            <li class="menu-item">
+                <a href="{{ url('/tourist/reviews') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <div data-i18n="Reviews">Reviews</div>
+                </a>
+            </li>
 
-        <li class="menu-item">
-            <a href="{{ url('/tourist/bookings') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                <div data-i18n="Booking">Booking</div>
-            </a>
-        </li>
-
-        <!-- Components -->
+            <li class="menu-item">
+                <a href="{{ url('/tourist/bookings') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                    <div data-i18n="Booking">Booking</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Setting</span></li>
-        <!-- Cards -->
-        <li class="menu-item">
-            <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Profile</div>
-            </a>
-        </li>
+        @if ($tourist)
+            <li class="menu-item">
+                <a href="{{ url('/' . Auth::user()->role . '/profile') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-collection"></i>
+                    <div data-i18n="Basic">Profile</div>
+                </a>
+            </li>
+        @endif
         <li class="menu-item">
             <a href="{{ url('/' . Auth::user()->role . '/update-password') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
