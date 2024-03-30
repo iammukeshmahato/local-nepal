@@ -48,8 +48,13 @@
 
                         <div class="mb-3 col-md-6">
                             <label for="languages" class="form-label">Language</label>
-                            <input type="text" class="form-control" id="languages" name="languages"
-                                value="{{ $user->languages }}" placeholder="English, Nepali" required />
+                            <select name="languages[]" multiple>
+                                @foreach ($languages as $language)
+                                    <option value="{{ $language->id }}">
+                                        {{ $language->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3 col-md-6">
                             <label for="location" class="form-label">Serving Location</label>

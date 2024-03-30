@@ -23,6 +23,7 @@ use App\Models\DestinationReview;
 use App\Models\Message;
 use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\StripePaymentController;
+use App\Models\Language;
 
 Route::get('/login', function () {
     if (Auth::check()) {
@@ -171,7 +172,8 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $guide = Guide::where('user_id', $user->id)->first();
         if (!$guide) {
             $profile_completed = false;
-            return view('guide.dashboard')->with(compact('user', 'profile_completed'));
+            $languages = Language::all();
+            return view('guide.dashboard')->with(compact('user', 'languages', 'profile_completed'));
         } else {
             $profile_completed = true;
             return view('guide.dashboard')->with(compact('guide', 'profile_completed'));
@@ -252,15 +254,18 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $national_id_name = $national_id->getClientOriginalName();
         $national_id->storeAs('public/guides/id/', $national_id_name);
 
-        Guide::create(array_merge($request->all(), ['user_id' => $user->id, 'status' => 'pending', 'national_id' => $national_id_name]));
+        $guide = Guide::create(array_merge($request->all(), ['user_id' => $user->id, 'status' => 'pending', 'national_id' => $national_id_name]));
+        $guide->languages()->attach($request->languages);
         session()->flash('success', 'Profile updated successfully wait for admin approval');
         return redirect('guide/dashboard');
     });
 
     Route::get('/profile', function () {
         $user = Auth::user();
-        $guide = Guide::where('user_id', $user->id)->first();
-        return view('guide.profile')->with(compact('user', 'guide'));
+        $guide = Guide::with('languages')->where('user_id', $user->id)->first();
+        $languages = Language::all();
+        // dd($guide->languages->contains(3));
+        return view('guide.profile')->with(compact('user', 'guide', 'languages'));
     });
 
     Route::post('/profile', function (Request $request) {
@@ -277,9 +282,10 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
                 $user->avatar = $avatarName;
             }
             $user->update($request->only('dob'));
-
+            $guide->languages()->sync($request->languages);
             session()->flash('success', 'Profile updated successfully');
         });
+        return redirect('/guide/profile');
         return view('guide.profile')->with(compact('user', 'guide'));
     });
 

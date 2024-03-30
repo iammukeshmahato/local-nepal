@@ -16,7 +16,6 @@ class Guide extends Model
         'address',
         'national_id',
         'status',
-        'languages',
         'avg_rating',
         'rate',
         'location',
@@ -32,7 +31,7 @@ class Guide extends Model
     {
         return $this->hasMany(GuideReview::class); // Has many GuideReviews
     }
-    
+
     public function bookings()
     {
         return $this->hasMany(Booking::class); // Has many Bookings
