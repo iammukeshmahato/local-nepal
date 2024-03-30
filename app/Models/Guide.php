@@ -38,6 +38,11 @@ class Guide extends Model
         return $this->hasMany(Booking::class); // Has many Bookings
     }
 
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class); // Belongs to many Languages
+    }
+
     protected static function boot()
     {
         parent::boot();

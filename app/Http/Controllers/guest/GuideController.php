@@ -46,7 +46,7 @@ class GuideController extends Controller
      */
     public function show(string $id)
     {
-        $guide = Guide::with('user', 'reviews')->find(base64_decode($id));
+        $guide = Guide::with('user', 'reviews', 'languages')->find(base64_decode($id));
         Paginator::useBootstrap();
         $perPage = 1;
         $guide_reviews = GuideReview::with('tourist')->paginate($perPage);

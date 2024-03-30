@@ -93,8 +93,8 @@
                         $languages = explode(',', $guide->languages);
                     @endphp
                     <ul>
-                        @foreach ($languages as $language)
-                            <li>{{ $language }}</li>
+                        @foreach ($guide->languages as $language)
+                            <li>{{ $language->name }}</li>
                         @endforeach
                     </ul>
                 </div>

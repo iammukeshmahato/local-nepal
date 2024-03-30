@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('about')->nullable();
             $table->string('national_id');
             $table->enum('status',['active','deactive','pending'])->default('pending')->comment('active, pending, approved, rejected');
-            $table->string('languages')->nullable();
             $table->string('avg_rating')->default(0);
             $table->string('rate')->default(0);
             $table->timestamps();
