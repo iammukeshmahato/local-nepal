@@ -1,250 +1,99 @@
 @extends('admin.layouts.main')
 @section('main-content')
-    {{-- languages --}}
     <div class="row">
-
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <h5 class="card-header">Add Language</h5>
+        <div class="col-md-4">
+            <div class="card mb-4 position-relative">
+                <h5 class="card-header">Total Destinations</h5>
                 <div class="card-body row">
                     <div class="mb-3 col-md-6">
-                        <label for="Language" class="form-label">Langugae</label>
-                        <input type="text" class="form-control" id="Language" placeholder="English" />
+                        <h1>{{ $total_destinations }}</h1>
                     </div>
                 </div>
+                <a href="{{ url('/admin/destinations/') }}" class="stretched-link"></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 position-relative">
+                <h5 class="card-header">Total Guides</h5>
+                <div class="card-body row">
+                    <div class="mb-3 col-md-6">
+                        <h1>{{ $total_guides }}</h1>
+                    </div>
+                </div>
+                <a href="{{ url('/admin/guide/') }}" class="stretched-link"></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 position-relative">
+                <h5 class="card-header">Total Tourists</h5>
+                <div class="card-body row">
+                    <div class="mb-3 col-md-6">
+                        <h1>{{ $total_tourists }}</h1>
+                    </div>
+                </div>
+                <a href="{{ url('/admin/tourist/') }}" class="stretched-link"></a>
             </div>
         </div>
 
-        <div class="col-md-6">
+
+        <div class="col-lg-6 col-md-12">
             <div class="card mb-4">
-                <h5 class="card-header">Languages I know</h5>
-                <div class="table-responsive text-nowrap">
+                <h5 class="card-header">New Destinations</h5>
+                <div class="card-body row">
                     <table class="table">
                         <thead>
-                            <tr>
-                                <th>S.N</th>
-                                <th>Name</th>
-                                <th>Actions</th>
-                            </tr>
+                            <th>SN</th>
+                            <th>Image</th>
+                            <th>Title</th>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                            <tr>
-                                <td>1</td>
-                                <td>Albert Cook</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                            data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);"><i
-                                                    class="bx bx-trash me-1"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Albert Cook</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                            data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);"><i
-                                                    class="bx bx-trash me-1"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach ($new_destinations as $item)
+                                <tr class="position-relative">
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td> <img class="avatar" src="{{ asset('storage/destinations/' . $item->cover_image) }}"
+                                            alt="..." style="width:4rem; height:4rem;"></td>
+                                    <td>{{ $item->title }}
+                                        <a href="{{ url('/admin/destinations/' . $item->id) }}" class="stretched-link"></a>
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{-- add guide --}}
-    <div class="col-md-12">
-        <div class="card mb-4">
-            <h5 class="card-header">Add Guide</h5>
-            <div class="card-body row">
-                <div class="mb-3 col-md-6">
-                    <label for="name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="John Doe" />
-                </div>
-                <div class="mb-3 col-md-6">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="name@example.com" />
-                </div>
-                <div class="mb-3 col-md-6">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="number" class="form-control" id="phone" placeholder="9800000000" />
-                </div>
-
-                <div class="mb-3 col-md-6">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="Kathmandu" />
-                </div>
-                <div class="mb-3 col-md-6">
-                    <label for="profile" class="form-label">Profile Picture</label>
-                    <input class="form-control" type="file" id="profile" />
-                </div>
-                <div class="mb-3 col-md-6">
-                    <label for="national_id" class="form-label">National ID</label>
-                    <input class="form-control" type="file" id="national_id" />
+        <div class="col-lg-6 col-md-12">
+            <div class="card mb-4">
+                <h5 class="card-header">New Guides</h5>
+                <div class="card-body row">
+                    <div>
+                        <table class="table">
+                            <thead>
+                                <th>SN</th>
+                                <th>Profile</th>
+                                <th>Name</th>
+                                <th>Location</th>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                @foreach ($new_guides as $item)
+                                    <tr class="position-relative">
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td> <img class="avatar"
+                                                src="{{ asset('storage/profiles/' . $item->user->avatar) }}" alt="..."
+                                                style="width:4rem; height:4rem;"></td>
+                                        <td>{{ $item->user->name }}
+                                            <a href="{{ url('/admin/guide/' . $item->id) }}" class="stretched-link"></a>
+                                        </td>
+                                        <td>
+                                            {{ $item->location }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- view guide -->
-    <div class="card">
-        <h5 class="card-header">Guides</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>S.N</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>Albert Cook</td>
-                        <td>example@gmail.com</td>
-                        <td>9800000000</td>
-                        <td>Kathmandu, Nepal</td>
-                        <td><span class="badge bg-label-success me-1">Active</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>
-                                        View</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i>
-                                        Edit</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
-                                        Delete</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>Albert Cook</td>
-                        <td>example@gmail.com</td>
-                        <td>9800000000</td>
-                        <td>Kathmandu, Nepal</td>
-                        <td><span class="badge bg-label-warning me-1">Not Listed</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i
-                                            class="bx bx-edit-alt me-1"></i> View</a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i
-                                                class="bx bx-edit-alt me-1"></i> Edit</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i
-                                                class="bx bx-trash me-1"></i> Delete</a>
-                                    </div>
-                                </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    {{-- bookings --}}
-    <div class="card mt-4">
-        <h5 class="card-header">My Booking</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>S.N</th>
-                        <th>Client</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Pickup Location</th>
-                        <th>Date & Time</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>Albert Cook</td>
-                        <td>example@gmail.com</td>
-                        <td>9800000000</td>
-                        <td>Kathmandu, Nepal</td>
-                        <td>2022-11-11 10:15</td>
-                        <td><span class="badge bg-label-success me-1">Booked</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i
-                                            class="bx bx-edit-alt me-1"></i> Accept</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
-                                        Decline</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>Albert Cook</td>
-                        <td>example@gmail.com</td>
-                        <td>9800000000</td>
-                        <td>Kathmandu, Nepal</td>
-                        <td>2022-11-11 10:15</td>
-                        <td><span class="badge bg-label-warning me-1">Pending</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i
-                                            class="bx bx-edit-alt me-1"></i> Accept</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
-                                        Decline</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-@endsection
+    @endsection

@@ -116,7 +116,13 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     });
 
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+        $total_guides = Guide::count();
+        $total_tourists = Tourist::count();
+        $total_destinations = Destination::count();
+        $new_destinations = Destination::limit(5)->latest()->get();
+        $new_guides = Guide::with('user')->limit(5)->latest()->get();
+        $data = compact('total_guides', 'total_tourists', 'total_destinations', 'new_destinations', 'new_guides');
+        return view('admin.dashboard')->with($data);
     });
 
     Route::resource('/guide', GuideController::class);
