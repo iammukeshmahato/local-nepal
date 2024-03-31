@@ -48,7 +48,7 @@
 
                         <div class="mb-3 col-md-6">
                             <label for="languages" class="form-label">Language</label>
-                            <select name="languages[]" multiple>
+                            <select name="languages[]" class="form-select" multiple>
                                 @foreach ($languages as $language)
                                     <option value="{{ $language->id }}">
                                         {{ $language->name }}
