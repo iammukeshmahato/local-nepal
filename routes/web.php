@@ -16,6 +16,7 @@ use App\Http\Controllers\admin\TouristController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
+use App\Http\Controllers\admin\LanguageController;
 use App\Models\Booking;
 use App\Models\GuideReview;
 use App\Models\Destination;
@@ -133,6 +134,7 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
     Route::get('/tourist', [TouristController::class, 'index']);
 
     Route::resource('/destinations', DestinationController::class);
+    Route::resource('/language', LanguageController::class);
 
     Route::get('/reviews', function () {
         $reviews = GuideReview::with('guide', 'tourist')->latest()->get();
