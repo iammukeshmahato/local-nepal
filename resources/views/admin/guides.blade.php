@@ -77,7 +77,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item" href="javascript:void(0);"
-                                                        onclick="confirm('Are you sure want to delete?')"><i
+                                                        onclick="return confirm('Are you sure want to delete?')"><i
                                                             class="bx bx-trash me-1"></i>
                                                         Delete</button>
                                                 </form>
