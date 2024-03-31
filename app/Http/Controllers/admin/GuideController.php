@@ -69,7 +69,7 @@ class GuideController extends Controller
 
         Mail::to($user->email)->send(new SendCredential($data));
 
-        session()->flash('success', 'Guide added successfully');
+        toast('Guide added successfully', 'success');
         return redirect('/admin/guide');
     }
 
@@ -99,11 +99,11 @@ class GuideController extends Controller
         if ($status == 'active') {
             $guide->status = 'active';
             $guide->save();
-            session()->flash('success', 'Guide activated successfully');
+            toast('Guide activated successfully', 'success');
         } elseif ($status == 'deactive') {
             $guide->status = 'deactive';
             $guide->save();
-            session()->flash('success', 'Guide deactivated successfully');
+            toast('Guide deactivated successfully', 'success');
         }
         return redirect('/admin/guide');
     }
@@ -130,7 +130,7 @@ class GuideController extends Controller
             $user->update($request->only('name', 'dob')); // Update specific user fields
         });
 
-        session()->flash('success', 'Guide updated successfully');
+        toast('Guide updated successfully', 'success');
 
         return redirect('admin/guide');
     }
@@ -143,7 +143,7 @@ class GuideController extends Controller
         $guide = Guide::find($id);
         $guide->delete();
         $guide->user->delete();
-        session()->flash('success', 'Guide deleted successfully');
+        toast('Guide deleted successfully', 'success');
         return redirect('/admin/guide');
     }
 
@@ -165,7 +165,7 @@ class GuideController extends Controller
 
         Mail::to($guide->user->email)->send(new GuideVerified($data));
 
-        session()->flash('success', 'Guide verified successfully');
+        toast('Guide verified successfully', 'success');
         return redirect('/admin/guide');
     }
 }

@@ -49,6 +49,7 @@ class DestinationController extends Controller
             'slug' => $slug,
         ]));
 
+        toast('Destination added successfully', 'success');
         return redirect('/admin/destinations')->with('success', 'Destination added successfully');
     }
 
@@ -93,7 +94,8 @@ class DestinationController extends Controller
             'cover_image' => $coverImage ?? $destination->cover_image,
         ]));
 
-        return redirect('/admin/destination')->with('success', 'Destination updated successfully');
+        toast('Destination updated successfully', 'success');
+        return redirect('/admin/destinations')->with('success', 'Destination updated successfully');
     }
 
     /**
@@ -104,6 +106,7 @@ class DestinationController extends Controller
         $destination = Destination::find($id);
         $destination->delete();
 
-        return redirect('/admin/destination')->with('success', 'Destination deleted successfully');
+        toast('Destination deleted successfully', 'success');
+        return redirect('/admin/destinations')->with('success', 'Destination deleted successfully');
     }
 }

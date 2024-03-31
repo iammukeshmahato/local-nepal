@@ -9,7 +9,7 @@
 @endpush
 
 @section('main-content')
-    <form action="{{ url('/admin/destination/' . $item->id) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url('/admin/destinations/' . $item->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="col-md-12">
@@ -61,8 +61,8 @@
 
                     </div>
                     <div class="mb-3 col-md-2">
-                        <img src="{{ asset('storage/destinations/' . $item->cover_image) }}" id="cover_image_preview" class="w-100 h-100 rounded"
-                            alt="">
+                        <img src="{{ asset('storage/destinations/' . $item->cover_image) }}" id="cover_image_preview"
+                            class="w-100 h-100 rounded" alt="">
                     </div>
                     <div class="mb-3 col-md-12">
                         <label for="description" class="form-label">Description</label>
