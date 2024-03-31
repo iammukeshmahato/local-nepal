@@ -81,9 +81,8 @@ class GuideController extends Controller
     public function book_guide_form(string $id)
     {
         if (!Auth::check() || Auth::user()->role != 'tourist') {
-            abort(403, 'Log in as a tourist to book a guide');
-            session()->flash('error', 'You need to login to book a guide');
-            return redirect('/login');
+            alert()->info('Login Required', 'Please login as a tourist to book a guide');
+            return redirect()->back();
         }
         $guide = Guide::with('user')->find(base64_decode($id));
         return view('guest.book_guide', compact('guide'));

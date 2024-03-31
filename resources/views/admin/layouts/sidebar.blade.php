@@ -12,7 +12,7 @@
     <ul class="menu-inner py-1 mt-4">
         <!-- Dashboards -->
         <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link">
+            <a href="{{ url('/admin/dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
             </a>
@@ -78,6 +78,25 @@
                 <li class="menu-item">
                     <a href="{{ url('/admin/destinations') }}" class="menu-link">
                         <div data-i18n="View Destination">View Destination</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-text"></i>
+                <div data-i18n="Language">Language</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item">
+                    <a href="{{ url('/admin/language/create') }}" class="menu-link">
+                        <div data-i18n="Add Language">Add Language</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ url('/admin/language') }}" class="menu-link">
+                        <div data-i18n="View Language">View Language</div>
                     </a>
                 </li>
             </ul>
