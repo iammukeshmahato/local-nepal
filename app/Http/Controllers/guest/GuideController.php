@@ -106,12 +106,12 @@ class GuideController extends Controller
 
     public function review_guide(Request $request, string $id)
     {
-        // dd($request->all());
-
         if (!Auth::check() || Auth::user()->role != 'tourist') {
-            abort(403, 'Log in as a tourist to review a guide');
-            session()->flash('error', 'You need to login to review a guide');
-            return redirect('/login');
+            alert()->info('Login Required', 'Please login as a tourist to rate a guide');
+            // abort(403, 'Log in as a tourist to review a guide');
+            // session()->flash('error', 'You need to login to review a guide');
+            // return redirect('/login');
+            return redirect()->back();
         }
 
         $user_id = Auth::user()->id;
@@ -119,18 +119,18 @@ class GuideController extends Controller
 
         $is_booking_completed = Booking::where('guide_id', base64_decode($id))->where('tourist_id', $tourist->id)->where('status', 'completed')->first() ? true : false;
         if (!$is_booking_completed) {
-            session()->flash('error', 'You can only review a guide you have booked and completed a tour with');
+            alert()->error('You have not completed booking', 'You can only review a guide you have booked and completed a tour with');
             return redirect()->back();
         }
 
         $is_already_reviewed = GuideReview::where('guide_id', base64_decode($id))->where('tourist_id', $tourist->id)->first() ? true : false;
         if ($is_already_reviewed) {
-            session()->flash('error', 'You have already reviewed this guide');
+            alert()->warning('Already', 'You have already rated this guide');
             return redirect()->back();
         }
 
         $guide_review = GuideReview::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
-        session()->flash('success', 'Review submitted successfully');
+        alert()->success('Review Added', 'Your rate and review for the guide is submitted successfully');
         return redirect()->back();
     }
 
@@ -138,7 +138,7 @@ class GuideController extends Controller
     {
         $guide_review = GuideReview::find(base64_decode($id));
         $guide_review->delete();
-        session()->flash('success', 'Review deleted successfully');
+        alert()->success('Reveiw Deleted', 'Your review is deleted successfully');
         return redirect()->back();
     }
 }
