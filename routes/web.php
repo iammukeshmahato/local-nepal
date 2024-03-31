@@ -89,14 +89,13 @@ Route::get('/destinations/{slug}/review', function (string $slug) {
 Route::post('/destinations/{slug}/review', function (Request $request, string $slug) {
 
     if (!Auth::check()) {
-        abort(403, 'Login to add review');
-        session()->flash('error', 'You need to login to add review');
-        return redirect('login');
+        alert()->warning('Login Required', 'Please login to add review');
+        return redirect()->back();
     }
 
     $is_already_reviewed = DestinationReview::where('user_id', Auth::user()->id)->where('destination_id', $request->destination_id)->first() ? true : false;
     if ($is_already_reviewed) {
-        session()->flash('error', 'You have already reviewed this guide');
+        alert()->warning('Already Rated', 'You have already rated this place');
         return redirect()->back();
     }
 
@@ -106,7 +105,7 @@ Route::post('/destinations/{slug}/review', function (Request $request, string $s
         'review' => 'required | string ',
     ]);
     $destination->reviews()->create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
-    session()->flash('success', 'Review added successfully');
+    alert()->success('Review Added', 'Review added successfully');
     return redirect('destinations/' . $slug);
 });
 

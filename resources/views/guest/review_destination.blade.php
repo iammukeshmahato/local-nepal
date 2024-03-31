@@ -57,6 +57,7 @@
     </style>
 @endpush
 @section('main-content')
+    @include('vendor.sweetalert.alert')
     <div class="container py-5">
         <div class="card mx-4 ">
             <h5 class="card-header text-center" style="font-size: 2rem;">{{ $destination->title }}</h5>
@@ -126,4 +127,5 @@
             }
         }
     </script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 @endpush
