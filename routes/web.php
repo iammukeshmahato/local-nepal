@@ -154,7 +154,7 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
         $user = User::find($user->id);
         $user->password = Hash::make($request->password);
         $user->save();
-        session()->flash('success', 'Password updated successfully');
+        toast('Password updated successfully', 'success');
         return redirect('/admin/update-password');
     });
 });
@@ -257,6 +257,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $guide = Guide::create(array_merge($request->all(), ['user_id' => $user->id, 'status' => 'pending', 'national_id' => $national_id_name]));
         $guide->languages()->attach($request->languages);
         session()->flash('success', 'Profile updated successfully wait for admin approval');
+        toast('Profile updated successfully wait for admin approval', 'success');
         return redirect('guide/dashboard');
     });
 
@@ -284,6 +285,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
             $user->update($request->only('dob'));
             $guide->languages()->sync($request->languages);
             session()->flash('success', 'Profile updated successfully');
+            toast('Profile updated successfully', 'success');
         });
         return redirect('/guide/profile');
         return view('guide.profile')->with(compact('user', 'guide'));
@@ -309,6 +311,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $user->password = Hash::make($request->password);
         $user->save();
         session()->flash('success', 'Password updated successfully');
+        toast('Password updated successfully', 'success');
         Auth::logout();
         return redirect('/login');
     });
@@ -365,7 +368,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
 
         // dd($clients);
         if (count($clients) == 0) {
-            abort(404, 'No messages');
+            return view('tourist.messages');
         }
         $messages = Message::where(function ($query) use ($clients) {
             $query->where('sender_id', $clients[0]->user->id)
@@ -410,6 +413,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
 
         Tourist::create($request->all() + ['user_id' => $user->id]);
         session()->flash('success', 'Profile updated successfully');
+        toast('Profile updated successfully', 'success');
         return redirect('tourist/dashboard');
     });
 
@@ -435,7 +439,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             }
             $user->update($request->only('dob'));
 
-            session()->flash('success', 'Profile updated successfully');
+            toast('Profile updated successfully', 'success');
         });
         return view('tourist.profile')->with(compact('user', 'tourist'));
     });
@@ -459,7 +463,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         $user = User::find($user->id);
         $user->password = Hash::make($request->password);
         $user->save();
-        session()->flash('success', 'Password updated successfully');
+        toast('Password updated successfully', 'success');
         Auth::logout();
         return redirect('/login');
     });

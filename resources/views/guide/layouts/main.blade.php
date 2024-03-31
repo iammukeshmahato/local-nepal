@@ -1,6 +1,7 @@
 @include('guide.layouts.header')
 
 <body>
+    @include('vendor.sweetalert.alert')
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             @include('guide.layouts.sidebar')

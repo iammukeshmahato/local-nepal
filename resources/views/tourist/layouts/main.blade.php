@@ -1,6 +1,7 @@
 @include('tourist.layouts.header')
 
 <body>
+    @include('vendor.sweetalert.alert')
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             @include('tourist.layouts.sidebar')

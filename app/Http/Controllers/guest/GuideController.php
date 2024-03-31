@@ -100,7 +100,7 @@ class GuideController extends Controller
             'payment_method' => 'cash',
             'payment_status' => 'unpaid',
         ]);
-        session()->flash('success', 'Booking successful');
+        alert()->success('Booked', 'Your booking is completed. You can check your bookings in your dashboard.');
         return redirect('/guides/' . base64_encode($booking->guide_id));
     }
 

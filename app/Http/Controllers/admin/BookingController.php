@@ -20,6 +20,7 @@ class BookingController extends Controller
         if ((Auth::user()->role == 'tourist' && $booking->tourist->user->id == Auth::user()->id) || (Auth::user()->role == 'guide' && $booking->guide->user->id == Auth::user()->id)) {
             $booking->status = 'cancelled';
             $booking->save();
+            toast('Booking Cancelled', 'success');
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -32,6 +33,7 @@ class BookingController extends Controller
         if ((Auth::user()->role == 'guide' && $booking->guide->user->id == Auth::user()->id)) {
             $booking->status = 'booked';
             $booking->save();
+            toast('Booking Request Accepted', 'success');
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -44,8 +46,9 @@ class BookingController extends Controller
         if ((Auth::user()->role == 'guide' && $booking->guide->user->id == Auth::user()->id)) {
             $booking->status = 'completed';
             $booking->save();
+            toast('Booking Completed', 'success');
         } else {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Unauthorized action.',);
         }
         return redirect('/' . Auth::user()->role . '/bookings');
     }
