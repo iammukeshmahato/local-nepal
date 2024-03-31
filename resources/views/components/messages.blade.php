@@ -8,7 +8,7 @@
     </style>
 @endpush
 @section('main-content')
-    @if (!$clients->isEmpty())
+    @if (isset($clients) && !$clients->isEmpty())
         <div class="app-chat overflow-hidden card">
             <div class="row g-0">
                 <!-- Chat & Contacts -->
@@ -146,6 +146,13 @@
                 <!-- /Chat History -->
 
                 <div class="app-overlay"></div>
+            </div>
+        </div>
+    @else
+        <div class="card">
+            <div class="card-body">
+
+                No messages found.
             </div>
         </div>
     @endif

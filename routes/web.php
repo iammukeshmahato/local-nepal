@@ -212,7 +212,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
             })
             ->get();
         if (count($clients) == 0) {
-            abort(404, 'No messages');
+            return view('guide.messages');
         }
         $messages = Message::where(function ($query) use ($clients) {
             $query->where('sender_id', $clients[0]->user->id)
