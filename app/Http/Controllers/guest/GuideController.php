@@ -90,6 +90,28 @@ class GuideController extends Controller
 
     public function book_guide(Request $request)
     {
+
+        $guide = Guide::with('user', 'bookings')->find($request->guide_id);
+
+        $StartDate = str_replace('T', ' ', $request->start_date) . ':00';
+        $EndDate = str_replace('T', ' ', $request->end_date) . ':00';
+
+        $existingBookings = $guide->bookings()->where(function ($query) use ($StartDate, $EndDate) {
+            $query->where('status', 'booked')->where(function ($subquery) use ($StartDate, $EndDate) {
+                $subquery->where('start_date', '<', $EndDate)
+                    ->where('end_date', '>', $StartDate);
+            })
+                ->orWhere(function ($subquery) use ($StartDate, $EndDate) {
+                    $subquery->where('start_date', '>=', $StartDate)
+                        ->where('end_date', '<=', $EndDate);
+                });
+        })->get();
+
+        if (count($existingBookings) > 0) {
+            alert()->error('Already Booked', 'The guide is already booked for this time period.');
+            return redirect()->back();
+        }
+
         $user_id = Auth::user()->id;
         $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
         $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));

@@ -56,6 +56,7 @@
     </style>
 @endpush
 @section('main-content')
+    @include('vendor.sweetalert.alert')
     <div class="container py-5 px-5">
         <h1 class="text-center mb-5">{{ $guide->user->name }}</h1>
         <div class="row justify-content-center px-5">
@@ -235,4 +236,5 @@
             }
         }
     </script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 @endpush
