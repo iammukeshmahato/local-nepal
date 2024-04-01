@@ -14,8 +14,8 @@
                 <a class="nav-item nav-link" href="{{ url('/') }}">Home</a>
                 <a class="nav-item nav-link" href="{{ url('/destinations') }}">Destination</a>
                 <a class="nav-item nav-link" href="{{ url('/guides') }}">Guide</a>
-                <a class="nav-item nav-link" href="{{ url('/') }}">About</a>
-                <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a>
+                {{-- <a class="nav-item nav-link" href="{{ url('/') }}">About</a>
+                <a class="nav-item nav-link" href="{{ url('/') }}">Contact</a> --}}
                 @if (auth()->check())
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">

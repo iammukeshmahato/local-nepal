@@ -1,6 +1,6 @@
 @extends('guest.layouts.main')
 @push('title')
-    <title>Home | LocalNepal</title>
+    <title>Book - {{ $guide->user->name }} | LocalNepal</title>
 @endpush
 @push('links')
     <style>
