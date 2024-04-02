@@ -65,7 +65,7 @@ Route::get('/guides/review/{id}/delete', [GuestGuideController::class, 'delete_g
 Route::get('/destinations', function () {
     Paginator::useBootstrap();
     $perPage = 6;
-    $destinations = Destination::paginate($perPage);
+    $destinations = Destination::with('reviews')->withAvg('reviews', 'rating')->paginate($perPage);
     return view('guest.destinations', compact('destinations'));
 });
 
@@ -517,7 +517,6 @@ Route::get('/message', function () {
 
     return view('components.message');
 });
-
 
 Route::post('/payment/stripe', [StripePaymentController::class, 'payment']);
 Route::get('/payment/stripe/success', [StripePaymentController::class, 'success']);

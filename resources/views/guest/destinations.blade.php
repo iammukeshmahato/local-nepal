@@ -24,8 +24,13 @@
                                 <h6 class="text-muted">{{ $destination->type }}</h6>
                             </div>
                             <div class="guide-star col-md-4">
-                                <i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i
-                                    class='bx bx-star'></i><i class='bx bx-star'></i>
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= round($destination->reviews_avg_rating))
+                                        <i class='bx bxs-star'></i>
+                                    @else
+                                        <i class='bx bx-star'></i>
+                                    @endif
+                                @endfor
                                 <h6 class="text-muted mt-1">{{ count($destination->reviews) }} Reviews</h6>
                             </div>
 
