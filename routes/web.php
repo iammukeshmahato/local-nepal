@@ -183,7 +183,22 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
             return view('guide.dashboard')->with(compact('user', 'languages', 'profile_completed'));
         } else {
             $profile_completed = true;
-            return view('guide.dashboard')->with(compact('guide', 'profile_completed'));
+
+            $total_transactions_this_month = Booking::join('transactions', 'bookings.id', '=', 'transactions.booking_id')
+                ->where('bookings.guide_id', $guide->id)
+                ->whereMonth('bookings.created_at', date('m'))
+                ->where('status', 'completed')
+                ->sum('transactions.amount');
+
+            $total_tourists_served_this_month = Booking::where('guide_id', $guide->id)->whereMonth('created_at', date('m'))->count();
+            $total_reviews = GuideReview::where('guide_id', $guide->id)->count();
+
+            $recent_bookings = Booking::with('guide', 'tourist', 'transactions')->where('guide_id', $guide->id)->latest()->limit(5)->get();
+            $recent_reviews = GuideReview::with('tourist')->where('guide_id', $guide->id)->latest()->limit(5)->get();
+
+            $data = compact('guide', 'profile_completed', 'total_transactions_this_month', 'recent_bookings', 'recent_reviews', 'total_tourists_served_this_month', 'total_reviews');
+
+            return view('guide.dashboard')->with($data);
         }
         return view('guide.dashboard');
     });
