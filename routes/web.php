@@ -339,9 +339,28 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             return view('tourist.dashboard')->with(compact('user', 'profile_completed'));
         } else {
             $profile_completed = true;
-            return view('tourist.dashboard')->with(compact('tourist', 'profile_completed'));
+
+            $new_destinations = Destination::limit(5)->latest()->get();
+            $recent_bookings = Booking::with('guide', 'tourist', 'transactions')->where('tourist_id', $tourist->id)->latest()->limit(5)->get();
+            $total_spent_this_month = Booking::join('transactions', 'bookings.id', '=', 'transactions.booking_id')
+                ->where('bookings.tourist_id', $tourist->id)
+                ->whereMonth('bookings.created_at', date('m'))
+                // ->where('transactions.payment_status', 'paid')
+                ->where('status', 'completed')
+                ->sum('transactions.amount');
+
+            // dd($total_spent_this_month);
+            $destination_travelled = Booking::where('tourist_id', $tourist->id)->where('status', 'completed')->distinct('guide_id')->count();
+            $total_reviews = GuideReview::where('tourist_id', $tourist->id)->count();
+            $recent_reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->latest()->limit(5)->get();
+
+            $data = compact('tourist', 'profile_completed', 'new_destinations', 'recent_bookings', 'total_spent_this_month', 'destination_travelled', 'total_reviews', 'recent_reviews');
+
+            return view('tourist.dashboard')->with($data);
         }
-        return view('tourist.dashboard');
+
+
+        // return view('tourist.dashboard')->with($data);
     });
 
     Route::get('/bookings', function () {
