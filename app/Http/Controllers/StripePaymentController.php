@@ -24,11 +24,12 @@ class StripePaymentController extends Controller
 
     public function payment(Request $request)
     {
-        if (session('is_through_booking') !== null && session('is_through_booking') == true) {
+        if (session('is_through_booking') !== null && session('total_cost') !== null) {
             $total_cost = session('total_cost');
         } else {
             $total_cost = $request->total_cost;
         }
+        // dd(session('is_through_booking'), session('total_cost'), $total_cost);
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         $session = \Stripe\Checkout\Session::create([
             'line_items' => [[
@@ -47,14 +48,14 @@ class StripePaymentController extends Controller
         ]);
 
 
-        if (session('is_through_booking') !== null && session('is_through_booking') == true) {
+        if (session('is_through_booking') !== null && session('transaction_id') !== null) {
             $transaction_id = session('transaction_id');
             $transaction = Transaction::where('id', $transaction_id)->first();
             $transaction->update([
                 'session_id' => $session->id,
             ]);
 
-            // session()->forget('is_through_booking');
+            session()->forget('is_through_booking');
             session()->forget('total_cost');
             session()->forget('transaction_id');
             return redirect($session->url);
