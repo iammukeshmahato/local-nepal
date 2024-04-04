@@ -24,6 +24,11 @@ class StripePaymentController extends Controller
 
     public function payment(Request $request)
     {
+        if (session('is_through_booking') !== null && session('is_through_booking') == true) {
+            $total_cost = session('total_cost');
+        } else {
+            $total_cost = $request->total_cost;
+        }
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         $session = \Stripe\Checkout\Session::create([
             'line_items' => [[
@@ -32,7 +37,7 @@ class StripePaymentController extends Controller
                     'product_data' => [
                         'name' => 'Guide Payment',
                     ],
-                    'unit_amount' => $request->total_cost * 100,
+                    'unit_amount' => $total_cost * 100,
                 ],
                 'quantity' => 1,
             ]],
@@ -42,19 +47,32 @@ class StripePaymentController extends Controller
         ]);
 
 
-        $user_id = Auth::user()->id;
-        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
-        $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
+        if (session('is_through_booking') !== null && session('is_through_booking') == true) {
+            $transaction_id = session('transaction_id');
+            $transaction = Transaction::where('id', $transaction_id)->first();
+            $transaction->update([
+                'session_id' => $session->id,
+            ]);
 
-        $booking->transactions()->create([
-            'booking_id' => $booking->id,
-            'session_id' => $session->id,
-            'amount' => $request->total_cost,
-            'payment_method' => 'stripe',
-            'payment_status' => 'unpaid',
-        ]);
+            // session()->forget('is_through_booking');
+            session()->forget('total_cost');
+            session()->forget('transaction_id');
+            return redirect($session->url);
+        } else {
+            $user_id = Auth::user()->id;
+            $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
+            $booking = Booking::create(array_merge($request->all(), ['tourist_id' => $tourist->id]));
 
-        return redirect($session->url);
+            $booking->transactions()->create([
+                'booking_id' => $booking->id,
+                'session_id' => $session->id,
+                'amount' => $request->total_cost,
+                'payment_method' => 'stripe',
+                'payment_status' => 'unpaid',
+            ]);
+            alert()->success('Booked', 'Booking Successful');
+            return redirect()->back();
+        }
     }
 
     public function success(Request $request)
@@ -74,6 +92,11 @@ class StripePaymentController extends Controller
             ]);
         } catch (\Exception $e) {
             throw new NotFoundHttpException();
+        }
+
+        if (session('is_through_booking') !== null) {
+            alert()->success('Paid', 'Payment Successful');
+            return redirect('/tourist/bookings');
         }
 
         session()->flash('success', 'Booking successful');

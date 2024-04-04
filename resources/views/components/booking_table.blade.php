@@ -5,11 +5,18 @@
             <thead>
                 <tr>
                     <th>S.N</th>
-                    <th>Tourist</th>
-                    <th>Guide</th>
+                    @if (Auth::user()->role != 'tourist')
+                        <th>Tourist</th>
+                    @endif
+                    @if (Auth::user()->role != 'guide')
+                        <th>Guide</th>
+                    @endif
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Method</th>
                     @if (Auth::user()->role == 'guide' || Auth::user()->role == 'tourist')
                         <th>Action</th>
                     @endif
@@ -26,16 +33,20 @@
                             <td>
                                 {{ $loop->iteration }}
                             </td>
-                            <td>
-                                <img src="{{ asset('storage/profiles/' . $item->tourist->user->avatar) }}" alt="Avatar"
-                                    class="avatar rounded-circle">
-                                {{ $item->tourist->user->name }}
-                            </td>
-                            <td>
-                                <img src="{{ asset('storage/profiles/' . $item->guide->user->avatar) }}" alt="Avatar"
-                                    class="avatar rounded-circle">
-                                {{ $item->guide->user->name }}
-                            </td>
+                            @if (Auth::user()->role != 'tourist')
+                                <td>
+                                    <img src="{{ asset('storage/profiles/' . $item->tourist->user->avatar) }}"
+                                        alt="Avatar" class="avatar rounded-circle">
+                                    {{ $item->tourist->user->name }}
+                                </td>
+                            @endif
+                            @if (Auth::user()->role != 'guide')
+                                <td>
+                                    <img src="{{ asset('storage/profiles/' . $item->guide->user->avatar) }}"
+                                        alt="Avatar" class="avatar rounded-circle">
+                                    {{ $item->guide->user->name }}
+                                </td>
+                            @endif
                             <td>{{ $item->start_date }}</td>
                             <td>{{ $item->end_date }}</td>
                             <td>
@@ -49,6 +60,20 @@
                                     <span class="badge bg-label-danger me-1">{{ $item->status }}</span>
                                 @endif
                             </td>
+                            <td>{{ $item->transactions[0]['amount'] }}</td>
+                            <td>
+                                @if ($item->transactions[0]['payment_status'] == 'paid')
+                                    <span
+                                        class="badge bg-label-success me-1">{{ $item->transactions[0]['payment_status'] }}
+                                    </span>
+                                @else
+                                    <span
+                                        class="badge bg-label-warning me-1">{{ $item->transactions[0]['payment_status'] }}
+                                    </span>
+                                @endif
+
+                            </td>
+                            <td class="text-capitalize">{{ $item->transactions[0]['payment_method'] }}</td>
                             @if (Auth::user()->role == 'guide' || Auth::user()->role == 'tourist')
                                 <td>
                                     <div class="dropdown">
@@ -69,6 +94,17 @@
                                                         href="{{ url('/guide/booking/' . $item->id . '/accept') }}">
                                                         <i class="bx bx-trash me-1"></i>Accept</a>
                                                 @endif
+                                                @if (Auth::user()->role == 'tourist' && $item->transactions[0]['payment_status'] == 'unpaid')
+                                                    <a class="dropdown-item"
+                                                        href="{{ url('/' . Auth::user()->role . '/payment/' . $item->id) }}">
+                                                        <i class="bx bx-trash me-1"></i>
+                                                        Pay</a>
+                                                @endif
+                                            @elseif(Auth::user()->role == 'tourist' && $item->transactions[0]['payment_status'] == 'unpaid')
+                                                <a class="dropdown-item"
+                                                    href="{{ url('/' . Auth::user()->role . '/payment/' . $item->id) }}">
+                                                    <i class="bx bx-trash me-1"></i>
+                                                    Pay</a>
                                             @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
                                                 <a class="dropdown-item"
                                                     href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}">

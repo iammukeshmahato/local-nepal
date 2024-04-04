@@ -508,6 +508,29 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         Auth::logout();
         return redirect('/login');
     });
+
+    Route::get('/payment/{id?}', function ($id) {
+        $booking = Booking::with('guide', 'tourist', 'transactions')->where('id', $id)->first();
+
+        if ($booking->tourist->user->id != Auth::user()->id) {
+            alert()->error('Error', 'Something Went Wrong');
+            return redirect()->back();
+        }
+
+        if ($booking->transactions[0]->payment_method == 'cash') {
+            $booking->transactions[0]->update(['payment_status' => 'paid']);
+            alert()->success('Paid', 'Payment Successful');
+            return redirect()->back();
+        }
+
+        if ($booking->transactions[0]->payment_method == 'stripe') {
+            $total_cost = $booking->transactions[0]->amount;
+            session()->put('total_cost', $total_cost);
+            session()->put('is_through_booking', true);
+            session()->put('transaction_id', $booking->transactions[0]->id);
+            return redirect('/payment/stripe');
+        }
+    });
 });
 
 
@@ -518,6 +541,7 @@ Route::get('/message', function () {
     return view('components.message');
 });
 
+Route::get('/payment/stripe', [StripePaymentController::class, 'payment']);
 Route::post('/payment/stripe', [StripePaymentController::class, 'payment']);
 Route::get('/payment/stripe/success', [StripePaymentController::class, 'success']);
 Route::get('/payment/stripe/cancel', [StripePaymentController::class, 'cancel']);
