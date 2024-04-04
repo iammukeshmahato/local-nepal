@@ -381,7 +381,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     Route::get('/bookings', function () {
         $user_id = Auth::user()->id;
         $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
-        $bookings = Booking::with('guide', 'tourist')->where('tourist_id', $tourist->id)->latest()->get();
+        $bookings = Booking::with('guide', 'tourist', 'transactions')->where('tourist_id', $tourist->id)->latest()->get();
         return view('tourist.bookings', compact('bookings'));
     });
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
