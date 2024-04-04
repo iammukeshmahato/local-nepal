@@ -1,6 +1,7 @@
 @extends(Auth::user()->role . '.layouts.main')
 @push('title')
-    <title>reviews - {{ Str::upper(Auth::user()->role) }} | LocalNepal</title>
+    <title>
+        reviews - {{ Str::upper(Auth::user()->role) }} | LocalNepal</title>
 @endpush
 @section('main-content')
     <div class="card">
@@ -45,7 +46,15 @@
                                         {{ $item->guide->user->name }}
                                     </td>
                                 @endif
-                                <td>{{ $item->rating }}</td>
+                                <td>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= round($item->rating))
+                                            <i class='bx bxs-star text-warning'></i>
+                                        @else
+                                            <i class='bx bx-star text-warning'></i>
+                                        @endif
+                                    @endfor
+                                </td>
                                 <td>{{ $item->review }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 @if (Auth::user()->role == 'tourist')
