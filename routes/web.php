@@ -255,7 +255,7 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
                     ->Where('receiver_id', $id);
             })->get();
             // dd($messages);
-            $receiver = Guide::where('user_id', $id)->first();
+            $receiver = Tourist::where('user_id', $id)->first();
             return view('guide.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
         }
 
@@ -416,7 +416,7 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
                 ->Where('receiver_id', Auth::user()->id);
         })->orWhere(function ($query) use ($clients) {
             $query->where('sender_id', Auth::user()->id)
-                ->orWhere('receiver_id', $clients[0]->id);
+                ->Where('receiver_id', $clients[0]->id);
         })->get();
 
 
@@ -441,6 +441,18 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     Route::post('/message', function (Request $request) {
         // dd($request->all());
         Message::create($request->all());
+        $pusher = new Pusher\Pusher("c4511fa24aeddfc52ef2", "29bbb46834eebe7e133d", "1780639", array('cluster' => 'ap2'));
+
+        // channel-name = chat-tourist-guide
+        if (Auth::user()->role == 'tourist' && $request->sender_id == Auth::user()->id)
+            $channel_name = 'chat-' . $request->sender_id . '-' . $request->receiver_id;
+        else
+            $channel_name = 'chat-' . $request->receiver_id . '-' . $request->sender_id;
+        $pusher->trigger($channel_name, 'message', [
+            'message' =>  $request->message
+        ]);
+        event(new MessageEvent($request->sender_id, $request->receiver_id, $request->message));
+        // return ["success" => true];
         return redirect()->back();
     });
 
