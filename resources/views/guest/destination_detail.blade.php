@@ -95,8 +95,6 @@
                                                 @endif
                                             @endfor
                                         </li>
-                                        </li>
-                                        </li>
                                     </ul>
                                     <p class="text-muted fw-light">{{ $review->review }}</p>
 
@@ -119,8 +117,6 @@
                                 <hr class="my-4" style="border-color: #ccc" />
                             @endif
                         @endforeach
-                        {{-- <div class="d-flex justify-content-center mt-5">{{ $reviews->links() }} </div> --}}
-                        {{-- @endif --}}
                     @endif
                 </div>
             </div>

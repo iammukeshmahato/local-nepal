@@ -2,59 +2,7 @@
 @push('title')
     <title>Book - {{ $guide->user->name }} | LocalNepal</title>
 @endpush
-@push('links')
-    <style>
-        .star {
-            font-size: 5vh;
-            cursor: pointer;
-        }
 
-        .one {
-            color: rgb(255, 0, 0);
-        }
-
-        .two {
-            color: rgb(255, 106, 0);
-        }
-
-        .three {
-            color: rgb(251, 255, 120);
-        }
-
-        .four {
-            color: rgb(255, 255, 0);
-        }
-
-        .five {
-            color: rgb(24, 159, 14);
-        }
-
-        .delete_action {
-            visibility: hidden;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 100%;
-            margin: 0 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .delete_action_btns {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .card-body:hover .delete_action {
-            visibility: visible;
-        }
-    </style>
-@endpush
 @section('main-content')
     @include('vendor.sweetalert.alert')
     <div class="container py-5 px-5">
@@ -165,76 +113,6 @@
 
 @push('script')
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script>
-        let start_date = document.getElementById('start_date');
-        start_date.setAttribute('min', new Date().toISOString().split('T')[0]);
-        let end_date = document.getElementById('end_date');
-        let total_cost = document.getElementById('total_cost');
-        let total_days = document.getElementById('total_days');
-        const rate = document.getElementById('rate').innerText;
-        const rate_day = document.getElementById('rate_day').innerText;
-
-        start_date.addEventListener('change', () => {
-            const today = new Date();
-            const selectedDate = new Date(start_date.value);
-            const selectedEndDate = new Date(end_date.value);
-            if (selectedDate < today || selectedEndDate < selectedDate) {
-                alert('Please select a valid start date');
-                start_date.value = '';
-            }
-            days_diff();
-        });
-        end_date.addEventListener('change', () => {
-            const today = new Date();
-            const selectedDate = new Date(start_date.value);
-            const selectedEndDate = new Date(end_date.value);
-            if (selectedDate < today || selectedEndDate < selectedDate) {
-                alert('Please select a valid end date');
-                start_date.value = '';
-            }
-            days_diff();
-        });
-
-        function days_diff() {
-            let start = new Date(start_date.value);
-            let end = new Date(end_date.value);
-            let diff = end - start;
-            let days = (diff / (1000 * 60 * 60 * 24));
-            let hours = Math.round(diff / (1000 * 60 * 60));
-            if (days < 0 || isNaN(days) || hours < 24) {
-                days = 0;
-                total_days.innerHTML = `Total Hours: <strong>${hours} Hours</strong>`;
-                cost = Math.ceil(Math.abs(hours * rate));
-            } else {
-                total_days.innerHTML = `Total Days: <strong>${Math.round(days)} Days</strong>`;
-                cost = Math.ceil(Math.abs(days * rate * 24));
-                if (days >= 1) {
-                    cost = Math.ceil(Math.abs(days * rate_day));
-                }
-            }
-            document.getElementById('total_cost_input').value = cost;
-            console.log(cost, document.getElementById('total_cost_input').value);
-            total_cost.innerText = `$${cost}`;
-        }
-
-        function payment_method() {
-            let submit_btn = document.getElementById('submit_btn');
-            let payment = document.querySelector('input[name="payment"]:checked').value;
-            if (payment == 'khalti') {
-                submit_btn.value = 'Pay by Khalti';
-                document.querySelector('form').setAttribute('action',
-                    "{{ url('/payment/khalti') }}");
-            } else if (payment == 'stripe') {
-                submit_btn.value = 'Pay by Stripe';
-                document.querySelector('form').setAttribute('action',
-                    "{{ url('/payment/stripe') }}");
-            } else {
-                submit_btn.value = 'Pay by Cash';
-                document.querySelector('form').setAttribute('action',
-                    "{{ url('/guides/' . base64_encode($guide->id) . '/book') }}");
-
-            }
-        }
-    </script>
+    <script src="{{ asset('assets/js/book_guide.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 @endpush
