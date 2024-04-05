@@ -20,95 +20,36 @@ use App\Http\Controllers\admin\LanguageController;
 use App\Models\Booking;
 use App\Models\GuideReview;
 use App\Models\Destination;
-use App\Models\DestinationReview;
 use App\Models\Message;
-use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\StripePaymentController;
 use App\Models\Language;
+use App\Http\Controllers\guest\DestinationController as GuestDestinationController;
+use App\Http\Controllers\guest\HomeController;
 
-Route::get('/login', function () {
-    if (Auth::check()) {
-        return redirect(Auth::user()->role . "/dashboard"); // Or another route name
-    }
-    return view('guest.login');
-});
-
-Route::get('/register', function () {
-    return view('guest.register');
-});
-
+Route::get('/login', [AuthController::class, 'login_form']);
+Route::get('/register', [AuthController::class, 'register_form']);
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/verify-email/{id}', [AuthController::class, 'verify_email'])->name('verify_email');
 Route::post('/verify-email', [AuthController::class, 'verify_email'])->name('verify_email');
 Route::get('/resend-otp/{id}', [AuthController::class, 'resend_otp'])->name('verify_email');
 Route::get('/reset-password', [AuthController::class, 'forget_password'])->middleware('guest');
 Route::post('/reset-password', [AuthController::class, 'forget_password_verify'])->middleware('guest');
-Route::get('/reset-password-form/{email}/{token}', function (string $email, string $token) {
-    return view('guest.reset-password', ['token' => $token, 'email' => $email]);
-})->middleware('guest');
+Route::get('/reset-password-form/{email}/{token}', [AuthController::class, 'set_new_password'])->middleware('guest');
 Route::post('/reset-password/new', [AuthController::class, 'reset_password'])->middleware('guest');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/', function () {
-    $destinations = Destination::with('reviews')->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(10)->get();
-    $guides = Guide::with('reviews')->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->limit(6)->get();
-    $reviews = DestinationReview::orderByDesc('rating')->limit(6)->latest()->get();
-    return view('guest.index')->with(compact('destinations', 'guides', 'reviews'));
-});
+Route::get('/', [HomeController::class, 'index']);
 
 Route::resource('/guides', GuestGuideController::class);
 Route::get('/guides/{id}/book', [GuestGuideController::class, 'book_guide_form']);
 Route::post('/guides/{id}/book', [GuestGuideController::class, 'book_guide']);
 Route::post('/guides/{id}/rate', [GuestGuideController::class, 'review_guide']);
 Route::get('/guides/review/{id}/delete', [GuestGuideController::class, 'delete_guide_review']);
-Route::get('/destinations', function () {
-    Paginator::useBootstrap();
-    $perPage = 6;
-    $destinations = Destination::with('reviews')->withAvg('reviews', 'rating')->paginate($perPage);
-    return view('guest.destinations', compact('destinations'));
-});
-
-Route::get('/destinations/{slug}', function (string $slug) {
-
-    // Paginator::useBootstrap();
-    // $perPage = 10;
-    $destination = Destination::with('reviews')->where('slug', $slug)->first();
-    // if ($destination) {
-    //     $reviews = $destination->reviews()->paginate($perPage);
-    //     dd($reviews);
-    //     return view('guest.destination_detail', compact('destination', 'reviews'));
-    // }
-    return view('guest.destination_detail', compact('destination'));
-});
-
-Route::get('/destinations/{slug}/review', function (string $slug) {
-    $destination = Destination::where('slug', $slug)->first();
-    return view('guest.review_destination', compact('destination'));
-});
-
-Route::post('/destinations/{slug}/review', function (Request $request, string $slug) {
-
-    if (!Auth::check()) {
-        alert()->warning('Login Required', 'Please login to add review');
-        return redirect()->back();
-    }
-
-    $is_already_reviewed = DestinationReview::where('user_id', Auth::user()->id)->where('destination_id', $request->destination_id)->first() ? true : false;
-    if ($is_already_reviewed) {
-        alert()->warning('Already Rated', 'You have already rated this place');
-        return redirect()->back();
-    }
-
-    $destination = Destination::find($request->destination_id);
-    $request->validate([
-        'rating' => 'required',
-        'review' => 'required | string ',
-    ]);
-    $destination->reviews()->create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
-    alert()->success('Review Added', 'Review added successfully');
-    return redirect('destinations/' . $slug);
-});
+Route::get('/destinations', [GuestDestinationController::class, 'index']);
+Route::get('/destinations/{slug}', [GuestDestinationController::class, 'show']);
+Route::get('/destinations/{slug}/review', [GuestDestinationController::class, 'review_page']);
+Route::post('/destinations/{slug}/review', [GuestDestinationController::class, 'post_review']);
 
 // admin routes
 Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAuth::class]], function () {

@@ -13,6 +13,22 @@ use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class AuthController extends Controller
 {
+    public function login_form()
+    {
+        if (Auth::check()) {
+            return redirect(Auth::user()->role . "/dashboard"); // Or another route name
+        }
+        return view('guest.login');
+    }
+
+    public function register_form()
+    {
+        if (Auth::check()) {
+            return redirect(Auth::user()->role . "/dashboard"); // Or another route name
+        }
+        return view('guest.register');
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -228,6 +244,11 @@ class AuthController extends Controller
             return back();
         }
         return redirect('/login');
+    }
+
+    public function set_new_password(string $email, string $token)
+    {
+        return view('guest.reset-password', ['token' => $token, 'email' => $email]);
     }
 
     public function logout()
