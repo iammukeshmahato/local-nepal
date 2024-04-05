@@ -16,18 +16,18 @@ use App\Http\Controllers\admin\TouristController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
-use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LanguageController;
 use App\Models\Booking;
 use App\Models\GuideReview;
 use App\Models\Destination;
 use App\Models\Message;
 use App\Http\Controllers\StripePaymentController;
-use App\Models\Language;
 use App\Http\Controllers\guest\DestinationController as GuestDestinationController;
 use App\Http\Controllers\guest\HomeController;
 use App\Http\Controllers\admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\guide\GuideProfileController;
+use App\Http\Controllers\guide\GuideDashboardController;
 
 Route::get('/login', [AuthController::class, 'login_form']);
 Route::get('/register', [AuthController::class, 'register_form']);
@@ -81,165 +81,18 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         return redirect('guide/dashboard');
     });
 
-    Route::get('/dashboard', function () {
-
-        $user = Auth::user();
-        $guide = Guide::where('user_id', $user->id)->first();
-        if (!$guide) {
-            $profile_completed = false;
-            $languages = Language::all();
-            return view('guide.dashboard')->with(compact('user', 'languages', 'profile_completed'));
-        } else {
-            $profile_completed = true;
-
-            $total_transactions_this_month = Booking::join('transactions', 'bookings.id', '=', 'transactions.booking_id')
-                ->where('bookings.guide_id', $guide->id)
-                ->whereMonth('bookings.created_at', date('m'))
-                ->where('status', 'completed')
-                ->sum('transactions.amount');
-
-            $total_tourists_served_this_month = Booking::where('guide_id', $guide->id)->whereMonth('created_at', date('m'))->count();
-            $total_reviews = GuideReview::where('guide_id', $guide->id)->count();
-
-            $recent_bookings = Booking::with('guide', 'tourist', 'transactions')->where('guide_id', $guide->id)->latest()->limit(5)->get();
-            $recent_reviews = GuideReview::with('tourist')->where('guide_id', $guide->id)->latest()->limit(5)->get();
-
-            $data = compact('guide', 'profile_completed', 'total_transactions_this_month', 'recent_bookings', 'recent_reviews', 'total_tourists_served_this_month', 'total_reviews');
-
-            return view('guide.dashboard')->with($data);
-        }
-        return view('guide.dashboard');
-    });
-
-    Route::get('/bookings', function () {
-        $user_id = Auth::user()->id;
-        $guide = guide::with('user')->where('user_id', $user_id)->first();
-        $bookings = Booking::with('guide', 'tourist')->where('guide_id', $guide->id)->latest()->get();
-        return view('guide.bookings', compact('bookings'));
-    });
-
+    Route::get('/dashboard', [GuideDashboardController::class, 'index']);
+    Route::get('/bookings', [GuideDashboardController::class, 'bookings']);
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
     Route::get('/booking/{id}/accept', [BookingController::class, 'accept_booking']);
     Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
-
-    Route::get('/reviews', function () {
-        $user_id = Auth::user()->id;
-        $guide = Guide::with('user')->where('user_id', $user_id)->first();
-        $reviews = $guide->reviews;
-        return view('components.reviews', compact('reviews'));
-    });
-
-    Route::get('/messages/{id?}', function ($id = null) {
-        $user = Auth::user();
-        $guide = Guide::where('user_id', $user->id)->first();
-
-        // $clients = Tourist::with('user')->get();
-        $clients = Tourist::with('user', 'bookings')
-            ->whereHas('bookings', function ($query) use ($guide) {
-                $query->where('guide_id', $guide->id);
-            })
-            ->get();
-        if (count($clients) == 0) {
-            return view('guide.messages');
-        }
-        $messages = Message::where(function ($query) use ($clients) {
-            $query->where('sender_id', $clients[0]->user->id)
-                ->Where('receiver_id', Auth::user()->id);
-        })->orWhere(function ($query) use ($clients) {
-            $query->where('sender_id', Auth::user()->id)
-                ->orWhere('receiver_id', $clients[0]->id);
-        })->get();
-
-        $receiver_id = $clients[0]->user->id;
-        if ($id) {
-            $receiver_id = $id;
-            $messages = Message::where(function ($query) use ($id) {
-                $query->where('sender_id', $id)
-                    ->Where('receiver_id', Auth::user()->id);
-            })->orWhere(function ($query) use ($id) {
-                $query->where('sender_id', Auth::user()->id)
-                    ->Where('receiver_id', $id);
-            })->get();
-            $receiver = Tourist::where('user_id', $id)->first();
-            return view('guide.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
-        }
-
-
-        return view('guide.messages')->with(compact('clients', 'messages', 'receiver_id'));
-    });
-
-    Route::post('/update-profile', function (Request $request) {
-        $user = Auth::user();
-
-        $request->validate([
-            'phone' => 'required | digits:10 | min:10 | max:10 | unique:guides,phone| unique:tourists,phone',
-            'address' => 'required | string',
-            'national_id' => 'required | image',
-        ]);
-
-        $national_id = $request->file('national_id');
-        $national_id_name = $national_id->getClientOriginalName();
-        $national_id->storeAs('public/guides/id/', $national_id_name);
-
-        $guide = Guide::create(array_merge($request->all(), ['user_id' => $user->id, 'status' => 'pending', 'national_id' => $national_id_name]));
-        $guide->languages()->attach($request->languages);
-        session()->flash('success', 'Profile updated successfully wait for admin approval');
-        toast('Profile updated successfully wait for admin approval', 'success');
-        return redirect('guide/dashboard');
-    });
-
-    Route::get('/profile', function () {
-        $user = Auth::user();
-        $guide = Guide::with('languages')->where('user_id', $user->id)->first();
-        $languages = Language::all();
-        return view('guide.profile')->with(compact('user', 'guide', 'languages'));
-    });
-
-    Route::post('/profile', function (Request $request) {
-        $user = Auth::user();
-        $guide = Guide::where('user_id', $user->id)->first();
-        DB::transaction(function () use ($request, $user, $guide) {
-            $guide->update($request->all());
-            $user = User::find($guide->user_id);
-            if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar');
-                $avatarName = $avatar->getClientOriginalName();
-                $avatar->storeAs('public/profiles/', $avatarName);
-                $user->avatar = $avatarName;
-            }
-            $user->update($request->only('dob'));
-            $guide->languages()->sync($request->languages);
-            session()->flash('success', 'Profile updated successfully');
-            toast('Profile updated successfully', 'success');
-        });
-        return redirect('/guide/profile');
-        return view('guide.profile')->with(compact('user', 'guide'));
-    });
-
-    Route::get('/update-password', function () {
-        return view('guide.update_password');
-    });
-
-    Route::post('/update-password', function (Request $request) {
-        $user = Auth::user();
-
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required| confirmed | min:6',
-        ]);
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            session()->flash('error', 'Old password is incorrect');
-            return redirect('guide/update-password');
-        }
-        $user = User::find($user->id);
-        $user->password = Hash::make($request->password);
-        $user->save();
-        session()->flash('success', 'Password updated successfully');
-        toast('Password updated successfully', 'success');
-        Auth::logout();
-        return redirect('/login');
-    });
+    Route::get('/reviews', [GuideDashboardController::class, 'reviews']);
+    Route::get('/messages/{id?}', [GuideDashboardController::class, 'message']);
+    Route::post('/update-profile', [GuideProfileController::class, 'complete_profile']);
+    Route::get('/profile', [GuideProfileController::class, 'show_profile']);
+    Route::post('/profile', [GuideProfileController::class, 'update_profile']);
+    Route::get('/update-password', [GuideProfileController::class, 'change_password_form']);
+    Route::post('/update-password', [GuideProfileController::class, 'update_password']);
 });
 
 
