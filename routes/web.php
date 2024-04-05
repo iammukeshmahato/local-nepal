@@ -225,8 +225,6 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $user = Auth::user();
         $guide = Guide::where('user_id', $user->id)->first();
 
-        // dd($tourist->id);
-
         // $clients = Tourist::with('user')->get();
         $clients = Tourist::with('user', 'bookings')
             ->whereHas('bookings', function ($query) use ($guide) {
@@ -254,7 +252,6 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
                 $query->where('sender_id', Auth::user()->id)
                     ->Where('receiver_id', $id);
             })->get();
-            // dd($messages);
             $receiver = Tourist::where('user_id', $id)->first();
             return view('guide.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
         }
@@ -287,14 +284,12 @@ Route::group(['prefix' => 'guide', 'middleware' => [Authenticate::class]], funct
         $user = Auth::user();
         $guide = Guide::with('languages')->where('user_id', $user->id)->first();
         $languages = Language::all();
-        // dd($guide->languages->contains(3));
         return view('guide.profile')->with(compact('user', 'guide', 'languages'));
     });
 
     Route::post('/profile', function (Request $request) {
         $user = Auth::user();
         $guide = Guide::where('user_id', $user->id)->first();
-        // dd($request->all(), $user, $guide);
         DB::transaction(function () use ($request, $user, $guide) {
             $guide->update($request->all());
             $user = User::find($guide->user_id);
@@ -364,7 +359,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
                 ->where('status', 'completed')
                 ->sum('transactions.amount');
 
-            // dd($total_spent_this_month);
             $destination_travelled = Booking::where('tourist_id', $tourist->id)->where('status', 'completed')->distinct('guide_id')->count();
             $total_reviews = GuideReview::where('tourist_id', $tourist->id)->count();
             $recent_reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->latest()->limit(5)->get();
@@ -373,9 +367,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
 
             return view('tourist.dashboard')->with($data);
         }
-
-
-        // return view('tourist.dashboard')->with($data);
     });
 
     Route::get('/bookings', function () {
@@ -390,15 +381,12 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         $user_id = Auth::user()->id;
         $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
         $reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->get();
-        // dd($reviews);
         return view('components.reviews', compact('reviews'));
     });
 
     Route::get('/messages/{id?}', function ($id = null) {
         $user = Auth::user();
         $tourist = Tourist::where('user_id', $user->id)->first();
-
-        // dd($tourist->id);
 
         // $clients = Guide::with('user', 'bookings')->where('bookings.tourist_id', $tourist->id)->get();
         $clients = Guide::with('user', 'bookings')
@@ -407,7 +395,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             })
             ->get();
 
-        // dd($clients);
         if (count($clients) == 0) {
             return view('tourist.messages');
         }
@@ -430,7 +417,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
                 $query->where('sender_id', Auth::user()->id)
                     ->Where('receiver_id', $id);
             })->get();
-            // dd($messages);
             $receiver = Guide::where('user_id', $id)->first();
             return view('tourist.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
         }
@@ -439,7 +425,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     });
 
     Route::post('/message', function (Request $request) {
-        // dd($request->all());
         Message::create($request->all());
         $pusher = new Pusher\Pusher("c4511fa24aeddfc52ef2", "29bbb46834eebe7e133d", "1780639", array('cluster' => 'ap2'));
 
@@ -451,8 +436,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         $pusher->trigger($channel_name, 'message', [
             'message' =>  $request->message
         ]);
-        event(new MessageEvent($request->sender_id, $request->receiver_id, $request->message));
-        // return ["success" => true];
         return redirect()->back();
     });
 
@@ -473,14 +456,12 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
     Route::get('/profile', function () {
         $user = Auth::user();
         $tourist = Tourist::where('user_id', $user->id)->first();
-        // dd($user, $tourist);
         return view('tourist.profile')->with(compact('user', 'tourist'));
     });
 
     Route::post('/profile', function (Request $request) {
         $user = Auth::user();
         $tourist = Tourist::where('user_id', $user->id)->first();
-        // dd($request->all(), $user, $tourist);
         DB::transaction(function () use ($request, $user, $tourist) {
             $tourist->update($request->all());
             $user = User::find($tourist->user_id);
@@ -543,14 +524,6 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
             return redirect('/payment/stripe');
         }
     });
-});
-
-
-// testing
-
-Route::get('/message', function () {
-
-    return view('components.message');
 });
 
 Route::get('/payment/stripe', [StripePaymentController::class, 'payment']);
