@@ -16,6 +16,7 @@ use App\Http\Controllers\admin\TouristController;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
+use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LanguageController;
 use App\Models\Booking;
 use App\Models\GuideReview;
@@ -25,6 +26,8 @@ use App\Http\Controllers\StripePaymentController;
 use App\Models\Language;
 use App\Http\Controllers\guest\DestinationController as GuestDestinationController;
 use App\Http\Controllers\guest\HomeController;
+use App\Http\Controllers\admin\ProfileController as AdminProfileController;
+use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
 
 Route::get('/login', [AuthController::class, 'login_form']);
 Route::get('/register', [AuthController::class, 'register_form']);
@@ -57,54 +60,18 @@ Route::group(['prefix' => 'admin', 'middleware' => [Authenticate::class, AdminAu
         return redirect('admin/dashboard');
     });
 
-    Route::get('/dashboard', function () {
-        $total_guides = Guide::count();
-        $total_tourists = Tourist::count();
-        $total_destinations = Destination::count();
-        $new_destinations = Destination::limit(5)->latest()->get();
-        $new_guides = Guide::with('user')->limit(5)->latest()->get();
-        $data = compact('total_guides', 'total_tourists', 'total_destinations', 'new_destinations', 'new_guides');
-        return view('admin.dashboard')->with($data);
-    });
-
+    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
     Route::resource('/guide', GuideController::class);
     Route::get('/guides/pending', [GuideController::class, 'pending']);
     Route::get('/guide/{id}/verify', [GuideController::class, 'verify']);
     Route::get('/guide/{id}/{status}', [GuideController::class, 'update_status']);
-
     Route::get('/tourist', [TouristController::class, 'index']);
-
     Route::resource('/destinations', DestinationController::class);
     Route::resource('/language', LanguageController::class);
-
-    Route::get('/reviews', function () {
-        $reviews = GuideReview::with('guide', 'tourist')->latest()->get();
-        return view('components.reviews', compact('reviews'));
-    });
-
+    Route::get('/reviews', [AdminDashboardController::class, 'reviews']);
     Route::get('/bookings', [BookingController::class, 'index']);
-    Route::get('/update-password', function () {
-        return view('admin.update_password');
-    });
-
-    Route::post('/update-password', function (Request $request) {
-        $user = Auth::user();
-
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required| confirmed | min:6',
-        ]);
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            session()->flash('error', 'Old password is incorrect');
-            return redirect('admin/update-password');
-        }
-        $user = User::find($user->id);
-        $user->password = Hash::make($request->password);
-        $user->save();
-        toast('Password updated successfully', 'success');
-        return redirect('/admin/update-password');
-    });
+    Route::get('/update-password', [AdminProfileController::class, 'change_password_form']);
+    Route::post('/update-password', [AdminProfileController::class, 'update_password']);
 });
 
 
