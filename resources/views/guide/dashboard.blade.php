@@ -108,166 +108,168 @@
         </div>
     @endif
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4 position-relative">
-                <h5 class="card-header">Transactions This Months</h5>
-                <div class="card-body row">
-                    <div class="mb-3">
-                        <h1>${{ $total_transactions_this_month }}</h1>
+    @if (isset($profile_completed) && $profile_completed && $guide->status == 'active')
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 position-relative">
+                    <h5 class="card-header">Transactions This Months</h5>
+                    <div class="card-body row">
+                        <div class="mb-3">
+                            <h1>${{ $total_transactions_this_month }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 position-relative">
-                <h5 class="card-header">Total Tourist Served This Month</h5>
-                <div class="card-body row">
-                    <div class="mb-3 col-md-6">
-                        <h1>{{ $total_tourists_served_this_month }}</h1>
+            <div class="col-md-4">
+                <div class="card mb-4 position-relative">
+                    <h5 class="card-header">Total Tourist Served This Month</h5>
+                    <div class="card-body row">
+                        <div class="mb-3 col-md-6">
+                            <h1>{{ $total_tourists_served_this_month }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 position-relative">
-                <h5 class="card-header">Total Reviews</h5>
-                <div class="card-body row">
-                    <div class="mb-3 col-md-6">
-                        <h1>{{ $total_reviews }}</h1>
+            <div class="col-md-4">
+                <div class="card mb-4 position-relative">
+                    <h5 class="card-header">Total Reviews</h5>
+                    <div class="card-body row">
+                        <div class="mb-3 col-md-6">
+                            <h1>{{ $total_reviews }}</h1>
+                        </div>
                     </div>
+                    <a href="{{ url('/guide/reviews/') }}" class="stretched-link"></a>
                 </div>
-                <a href="{{ url('/guide/reviews/') }}" class="stretched-link"></a>
             </div>
-        </div>
 
-        {{-- Recent Bookings --}}
-        <div class="col-lg-12 col-md-12">
-            <div class="card mb-4">
-                <h5 class="card-header">Recent Bookings</h5>
-                <div class="card-body row">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>S.N</th>
-                                <th>Guide</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Locaiton</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            @if ($recent_bookings->isEmpty())
+            {{-- Recent Bookings --}}
+            <div class="col-lg-12 col-md-12">
+                <div class="card mb-4">
+                    <h5 class="card-header">Recent Bookings</h5>
+                    <div class="card-body row">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td colspan="7" class="text-center">No Bookings Found</td>
-                                </tr>
-                            @else
-                                @foreach ($recent_bookings as $item)
-                                    <tr>
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        <td>
-                                            <img src="{{ asset('storage/profiles/' . $item->guide->user->avatar) }}"
-                                                alt="Avatar" class="avatar rounded-circle">
-                                            {{ $item->guide->user->name }}
-                                        </td>
-                                        <td>{{ $item->start_date }}</td>
-                                        <td>{{ $item->end_date }}</td>
-                                        <td>{{ $item->guide->location }}</td>
-                                        <td>${{ $item->transactions[0]['amount'] }}</td>
-                                        <td>
-                                            @if ($item->status == 'pending')
-                                                <span class="badge bg-label-warning me-1">{{ $item->status }}</span>
-                                            @elseif($item->status == 'booked')
-                                                <span class="badge bg-label-success me-1">{{ $item->status }}</span>
-                                            @elseif($item->status == 'completed')
-                                                <span class="badge bg-label-info me-1">{{ $item->status }}</span>
-                                            @elseif($item->status == 'cancelled')
-                                                <span class="badge bg-label-danger me-1">{{ $item->status }}</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        {{-- Recent Guide's Review --}}
-        <div class="col-lg-12 col-md-12">
-            <div class="card mb-4">
-                <h5 class="card-header">Recent Guide Reviews</h5>
-                <div class="card-body row">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>S.N</th>
-                                @if (Auth::user()->role == 'admin' || Auth::user()->role == 'tourist')
+                                    <th>S.N</th>
                                     <th>Guide</th>
-                                @endif
-                                <th>Rating</th>
-                                <th>Review</th>
-                                <th>Date</th>
-                                @if (Auth::user()->role == 'tourist')
-                                    <th>Action</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            @if ($recent_reviews->isEmpty())
-                                <tr>
-                                    <td colspan="7" class="text-center">No reviews Found</td>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Locaiton</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
                                 </tr>
-                            @else
-                                @foreach ($recent_reviews as $item)
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                @if ($recent_bookings->isEmpty())
                                     <tr>
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        @if (Auth::user()->role == 'admin' || Auth::user()->role == 'tourist')
+                                        <td colspan="7" class="text-center">No Bookings Found</td>
+                                    </tr>
+                                @else
+                                    @foreach ($recent_bookings as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
                                             <td>
                                                 <img src="{{ asset('storage/profiles/' . $item->guide->user->avatar) }}"
                                                     alt="Avatar" class="avatar rounded-circle">
                                                 {{ $item->guide->user->name }}
                                             </td>
-                                        @endif
-                                        <td>{{ $item->rating }}</td>
-                                        <td>{{ $item->review }}</td>
-                                        <td>{{ $item->created_at }}</td>
-                                        @if (Auth::user()->role == 'tourist')
+                                            <td>{{ $item->start_date }}</td>
+                                            <td>{{ $item->end_date }}</td>
+                                            <td>{{ $item->guide->location }}</td>
+                                            <td>${{ $item->transactions[0]['amount'] }}</td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown">
-                                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        @if ($item->tourist->user->id == Auth::user()->id)
-                                                            <a class="dropdown-item" href=""><i
-                                                                    class="bx bx-trash me-1"></i>
-                                                                Delete</a>
-                                                        @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
-                                                            <a class="dropdown-item"
-                                                                href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}"><i
-                                                                    class="bx bx-trash me-1"></i>
-                                                                Marked as Completed</a>
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                                @if ($item->status == 'pending')
+                                                    <span class="badge bg-label-warning me-1">{{ $item->status }}</span>
+                                                @elseif($item->status == 'booked')
+                                                    <span class="badge bg-label-success me-1">{{ $item->status }}</span>
+                                                @elseif($item->status == 'completed')
+                                                    <span class="badge bg-label-info me-1">{{ $item->status }}</span>
+                                                @elseif($item->status == 'cancelled')
+                                                    <span class="badge bg-label-danger me-1">{{ $item->status }}</span>
+                                                @endif
                                             </td>
-                                        @endif
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Recent Guide's Review --}}
+            <div class="col-lg-12 col-md-12">
+                <div class="card mb-4">
+                    <h5 class="card-header">Recent Guide Reviews</h5>
+                    <div class="card-body row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>S.N</th>
+                                    @if (Auth::user()->role == 'admin' || Auth::user()->role == 'tourist')
+                                        <th>Guide</th>
+                                    @endif
+                                    <th>Rating</th>
+                                    <th>Review</th>
+                                    <th>Date</th>
+                                    @if (Auth::user()->role == 'tourist')
+                                        <th>Action</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                @if ($recent_reviews->isEmpty())
+                                    <tr>
+                                        <td colspan="7" class="text-center">No reviews Found</td>
                                     </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                @else
+                                    @foreach ($recent_reviews as $item)
+                                        <tr>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            @if (Auth::user()->role == 'admin' || Auth::user()->role == 'tourist')
+                                                <td>
+                                                    <img src="{{ asset('storage/profiles/' . $item->guide->user->avatar) }}"
+                                                        alt="Avatar" class="avatar rounded-circle">
+                                                    {{ $item->guide->user->name }}
+                                                </td>
+                                            @endif
+                                            <td>{{ $item->rating }}</td>
+                                            <td>{{ $item->review }}</td>
+                                            <td>{{ $item->created_at }}</td>
+                                            @if (Auth::user()->role == 'tourist')
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                                            data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            @if ($item->tourist->user->id == Auth::user()->id)
+                                                                <a class="dropdown-item" href=""><i
+                                                                        class="bx bx-trash me-1"></i>
+                                                                    Delete</a>
+                                                            @elseif($item->status == 'booked' && Auth::user()->role == 'guide')
+                                                                <a class="dropdown-item"
+                                                                    href="{{ url('/' . Auth::user()->role . '/booking/' . $item->id) . '/completed' }}"><i
+                                                                        class="bx bx-trash me-1"></i>
+                                                                    Marked as Completed</a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endsection

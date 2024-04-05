@@ -4,57 +4,7 @@
 @endpush
 
 @push('links')
-    <style>
-        .star {
-            font-size: 5vh;
-            cursor: pointer;
-        }
-
-        .one {
-            color: rgb(255, 0, 0);
-        }
-
-        .two {
-            color: rgb(255, 106, 0);
-        }
-
-        .three {
-            color: rgb(251, 255, 120);
-        }
-
-        .four {
-            color: rgb(255, 255, 0);
-        }
-
-        .five {
-            color: rgb(24, 159, 14);
-        }
-
-        .delete_action {
-            visibility: hidden;
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 100%;
-            margin: 0 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .delete_action_btns {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .review:hover .delete_action {
-            visibility: visible;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/stars.css') }}">
 @endpush
 @section('main-content')
     @include('vendor.sweetalert.alert')
@@ -97,35 +47,6 @@
     </div>
 @endsection
 @push('script')
-    <script>
-        // To access the stars
-        let stars = document.getElementsByClassName('star')
-        let output = document.getElementById('output')
-
-        // Funtion to update rating
-        function gfg(n) {
-            remove()
-            for (let i = 0; i < n; i++) {
-                if (n == 1) cls = 'one'
-                else if (n == 2) cls = 'two'
-                else if (n == 3) cls = 'three'
-                else if (n == 4) cls = 'four'
-                else if (n == 5) cls = 'five'
-                stars[i].className = 'star ' + cls
-            }
-            output.innerText = 'Rating is: ' + n + '/5'
-
-            document.getElementById('rating').value = n
-        }
-
-        // To remove the pre-applied styling
-        function remove() {
-            let i = 0
-            while (i < 5) {
-                stars[i].className = 'star'
-                i++
-            }
-        }
-    </script>
+    <script src="{{ asset('assets/js/stars.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 @endpush

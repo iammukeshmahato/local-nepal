@@ -1,0 +1,49 @@
+.star {
+    font-size: 5vh;
+    cursor: pointer;
+}
+
+.one {
+    color: rgb(255, 0, 0);
+}
+
+.two {
+    color: rgb(255, 106, 0);
+}
+
+.three {
+    color: rgb(251, 255, 120);
+}
+
+.four {
+    color: rgb(255, 255, 0);
+}
+
+.five {
+    color: rgb(24, 159, 14);
+}
+
+.delete_action {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    margin: 0 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete_action_btns {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.review:hover .delete_action {
+    visibility: visible;
+}
