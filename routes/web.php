@@ -5,22 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\Authenticate;
-use App\Models\Guide;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\guest\GuideController as GuestGuideController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Tourist;
 use App\Http\Controllers\admin\TouristController;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\admin\DestinationController;
 use App\Http\Controllers\admin\BookingController;
 use App\Http\Controllers\admin\LanguageController;
-use App\Models\Booking;
-use App\Models\GuideReview;
-use App\Models\Destination;
-use App\Models\Message;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\guest\DestinationController as GuestDestinationController;
 use App\Http\Controllers\guest\HomeController;
@@ -28,6 +17,10 @@ use App\Http\Controllers\admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\guide\GuideProfileController;
 use App\Http\Controllers\guide\GuideDashboardController;
+use App\Http\Controllers\tourist\TouristDashboardController;
+use App\Http\Controllers\tourist\TouristProfileController;
+
+// guest routes
 
 Route::get('/login', [AuthController::class, 'login_form']);
 Route::get('/register', [AuthController::class, 'register_form']);
@@ -102,189 +95,19 @@ Route::group(['prefix' => 'tourist', 'middleware' => [Authenticate::class]], fun
         return redirect('tourist/dashboard');
     });
 
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        $tourist = Tourist::where('user_id', $user->id)->first();
-        if (!$tourist) {
-            $profile_completed = false;
-            return view('tourist.dashboard')->with(compact('user', 'profile_completed'));
-        } else {
-            $profile_completed = true;
-
-            $new_destinations = Destination::limit(5)->latest()->get();
-            $recent_bookings = Booking::with('guide', 'tourist', 'transactions')->where('tourist_id', $tourist->id)->latest()->limit(5)->get();
-            $total_spent_this_month = Booking::join('transactions', 'bookings.id', '=', 'transactions.booking_id')
-                ->where('bookings.tourist_id', $tourist->id)
-                ->whereMonth('bookings.created_at', date('m'))
-                // ->where('transactions.payment_status', 'paid')
-                ->where('status', 'completed')
-                ->sum('transactions.amount');
-
-            $destination_travelled = Booking::where('tourist_id', $tourist->id)->where('status', 'completed')->distinct('guide_id')->count();
-            $total_reviews = GuideReview::where('tourist_id', $tourist->id)->count();
-            $recent_reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->latest()->limit(5)->get();
-
-            $data = compact('tourist', 'profile_completed', 'new_destinations', 'recent_bookings', 'total_spent_this_month', 'destination_travelled', 'total_reviews', 'recent_reviews');
-
-            return view('tourist.dashboard')->with($data);
-        }
-    });
-
-    Route::get('/bookings', function () {
-        $user_id = Auth::user()->id;
-        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
-        $bookings = Booking::with('guide', 'tourist', 'transactions')->where('tourist_id', $tourist->id)->latest()->get();
-        return view('tourist.bookings', compact('bookings'));
-    });
+    Route::get('/dashboard', [TouristDashboardController::class, 'index']);
+    Route::get('/bookings', [TouristDashboardController::class, 'bookings']);
     Route::get('/booking/{id}/cancel', [BookingController::class, 'cancel_booking']);
     Route::get('/booking/{id}/completed', [BookingController::class, 'completed_booking']);
-    Route::get('/reviews', function () {
-        $user_id = Auth::user()->id;
-        $tourist = Tourist::with('user')->where('user_id', $user_id)->first();
-        $reviews = GuideReview::with('guide')->where('tourist_id', $tourist->id)->get();
-        return view('components.reviews', compact('reviews'));
-    });
-
-    Route::get('/messages/{id?}', function ($id = null) {
-        $user = Auth::user();
-        $tourist = Tourist::where('user_id', $user->id)->first();
-
-        // $clients = Guide::with('user', 'bookings')->where('bookings.tourist_id', $tourist->id)->get();
-        $clients = Guide::with('user', 'bookings')
-            ->whereHas('bookings', function ($query) use ($tourist) {
-                $query->where('tourist_id', $tourist->id);
-            })
-            ->get();
-
-        if (count($clients) == 0) {
-            return view('tourist.messages');
-        }
-        $messages = Message::where(function ($query) use ($clients) {
-            $query->where('sender_id', $clients[0]->user->id)
-                ->Where('receiver_id', Auth::user()->id);
-        })->orWhere(function ($query) use ($clients) {
-            $query->where('sender_id', Auth::user()->id)
-                ->Where('receiver_id', $clients[0]->id);
-        })->get();
-
-
-        $receiver_id = $clients[0]->user->id;
-        if ($id) {
-            $receiver_id = $id;
-            $messages = Message::where(function ($query) use ($id) {
-                $query->where('sender_id', $id)
-                    ->Where('receiver_id', Auth::user()->id);
-            })->orWhere(function ($query) use ($id) {
-                $query->where('sender_id', Auth::user()->id)
-                    ->Where('receiver_id', $id);
-            })->get();
-            $receiver = Guide::where('user_id', $id)->first();
-            return view('tourist.messages')->with(compact('clients', 'messages', 'receiver', 'receiver_id'));
-        }
-
-        return view('tourist.messages')->with(compact('clients', 'messages', 'receiver_id'));
-    });
-
-    Route::post('/message', function (Request $request) {
-        Message::create($request->all());
-        $pusher = new Pusher\Pusher("c4511fa24aeddfc52ef2", "29bbb46834eebe7e133d", "1780639", array('cluster' => 'ap2'));
-
-        // channel-name = chat-tourist-guide
-        if (Auth::user()->role == 'tourist' && $request->sender_id == Auth::user()->id)
-            $channel_name = 'chat-' . $request->sender_id . '-' . $request->receiver_id;
-        else
-            $channel_name = 'chat-' . $request->receiver_id . '-' . $request->sender_id;
-        $pusher->trigger($channel_name, 'message', [
-            'message' =>  $request->message
-        ]);
-        return redirect()->back();
-    });
-
-    Route::post('/update-profile', function (Request $request) {
-        $user = Auth::user();
-
-        $request->validate([
-            'phone' => 'required | digits:10 | min:10 | max:10 | unique:guides,phone| unique:tourists,phone',
-            'nationality' => 'required | string',
-        ]);
-
-        Tourist::create($request->all() + ['user_id' => $user->id]);
-        session()->flash('success', 'Profile updated successfully');
-        toast('Profile updated successfully', 'success');
-        return redirect('tourist/dashboard');
-    });
-
-    Route::get('/profile', function () {
-        $user = Auth::user();
-        $tourist = Tourist::where('user_id', $user->id)->first();
-        return view('tourist.profile')->with(compact('user', 'tourist'));
-    });
-
-    Route::post('/profile', function (Request $request) {
-        $user = Auth::user();
-        $tourist = Tourist::where('user_id', $user->id)->first();
-        DB::transaction(function () use ($request, $user, $tourist) {
-            $tourist->update($request->all());
-            $user = User::find($tourist->user_id);
-            if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar');
-                $avatarName = $avatar->getClientOriginalName();
-                $avatar->storeAs('public/profiles/', $avatarName);
-                $user->avatar = $avatarName;
-            }
-            $user->update($request->only('dob'));
-
-            toast('Profile updated successfully', 'success');
-        });
-        return view('tourist.profile')->with(compact('user', 'tourist'));
-    });
-
-    Route::get('/update-password', function () {
-        return view('tourist.update_password');
-    });
-
-    Route::post('/update-password', function (Request $request) {
-        $user = Auth::user();
-
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required| confirmed | min:6',
-        ]);
-
-        if (!Hash::check($request->current_password, $user->password)) {
-            session()->flash('error', 'Old password is incorrect');
-            return redirect('tourist/update-password');
-        }
-        $user = User::find($user->id);
-        $user->password = Hash::make($request->password);
-        $user->save();
-        toast('Password updated successfully', 'success');
-        Auth::logout();
-        return redirect('/login');
-    });
-
-    Route::get('/payment/{id?}', function ($id) {
-        $booking = Booking::with('guide', 'tourist', 'transactions')->where('id', $id)->first();
-
-        if ($booking->tourist->user->id != Auth::user()->id) {
-            alert()->error('Error', 'Something Went Wrong');
-            return redirect()->back();
-        }
-
-        if ($booking->transactions[0]->payment_method == 'cash') {
-            $booking->transactions[0]->update(['payment_status' => 'paid']);
-            alert()->success('Paid', 'Payment Successful');
-            return redirect()->back();
-        }
-
-        if ($booking->transactions[0]->payment_method == 'stripe') {
-            $total_cost = $booking->transactions[0]->amount;
-            session()->put('total_cost', $total_cost);
-            session()->put('is_through_booking', true);
-            session()->put('transaction_id', $booking->transactions[0]->id);
-            return redirect('/payment/stripe');
-        }
-    });
+    Route::get('/reviews', [TouristDashboardController::class, 'reviews']);
+    Route::get('/messages/{id?}', [TouristDashboardController::class, 'messages']);
+    Route::post('/message', [TouristDashboardController::class, 'send_message']);
+    Route::post('/update-profile', [TouristProfileController::class, 'complete_profile']);
+    Route::get('/profile', [TouristProfileController::class, 'show_profile']);
+    Route::post('/profile', [TouristProfileController::class, 'update_profile']);
+    Route::get('/update-password', [TouristProfileController::class, 'change_password_form']);
+    Route::post('/update-password', [TouristProfileController::class, 'update_password']);
+    Route::get('/payment/{id?}', [TouristDashboardController::class, 'payment']);
 });
 
 Route::get('/payment/stripe', [StripePaymentController::class, 'payment']);
