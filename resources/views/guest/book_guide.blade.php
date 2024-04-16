@@ -115,4 +115,25 @@
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="{{ asset('assets/js/book_guide.js') }}"></script>
     <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+    <script>
+        function payment_method() {
+            let submit_btn = document.getElementById('submit_btn');
+            let payment = document.querySelector('input[name="payment"]:checked').value;
+            if (payment == 'khalti') {
+                submit_btn.value = 'Pay by Khalti';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/payment/khalti') }}");
+            } else if (payment == 'stripe') {
+                submit_btn.value = 'Pay by Stripe';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/payment/stripe') }}");
+                console.log(location.href, location.origin);
+            } else {
+                submit_btn.value = 'Pay by Cash';
+                document.querySelector('form').setAttribute('action',
+                    "{{ url('/guides/' . base64_encode($guide->id) . '/book') }}");
+
+            }
+        }
+    </script>
 @endpush

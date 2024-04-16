@@ -48,22 +48,3 @@ function days_diff() {
     console.log(cost, document.getElementById('total_cost_input').value);
     total_cost.innerText = `$${cost}`;
 }
-
-function payment_method() {
-    let submit_btn = document.getElementById('submit_btn');
-    let payment = document.querySelector('input[name="payment"]:checked').value;
-    if (payment == 'khalti') {
-        submit_btn.value = 'Pay by Khalti';
-        document.querySelector('form').setAttribute('action',
-            "{{ url('/payment/khalti') }}");
-    } else if (payment == 'stripe') {
-        submit_btn.value = 'Pay by Stripe';
-        document.querySelector('form').setAttribute('action',
-            "{{ url('/payment/stripe') }}");
-    } else {
-        submit_btn.value = 'Pay by Cash';
-        document.querySelector('form').setAttribute('action',
-            "{{ url('/guides/' . base64_encode($guide->id) . '/book') }}");
-
-    }
-}
