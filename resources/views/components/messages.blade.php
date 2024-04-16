@@ -68,7 +68,7 @@
                                                 {{ $clients[0]->user->name }}
                                             @endif
                                         </h6>
-                                        <small class="user-status text-muted">Location</small>
+                                        {{-- <small class="user-status text-muted">Location</small> --}}
                                     </div>
                                 </div>
                             </div>
@@ -130,10 +130,10 @@
                                 <input class="form-control message-input border-0 me-3 shadow-none"
                                     placeholder="Type your message here..." name="message">
                                 <div class="message-actions d-flex align-items-center">
-                                    <i class="speech-to-text bx bx-microphone bx-sm cursor-pointer"></i>
+                                    {{-- <i class="speech-to-text bx bx-microphone bx-sm cursor-pointer"></i>
                                     <label for="attach-doc" class="form-label mb-0">
                                         <i class="bx bx-paperclip bx-sm cursor-pointer mx-3"></i>
-                                    </label>
+                                    </label> --}}
                                     <button class="btn btn-primary d-flex send-msg-btn">
                                         <i class="bx bx-paper-plane me-md-1 me-0"></i>
                                         <span class="align-middle d-md-inline-block d-none">Send</span>
