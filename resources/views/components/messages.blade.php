@@ -165,28 +165,29 @@
     <script src="{{ asset('assets/js/chat.js') }}"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-    <script>
-        let receiver_id = "{{ $receiver_id }}";
-        let sender_id = "{{ Auth::user()->id }}";
-        let sender_role = "{{ Auth::user()->role }}";
+    @if (isset($receiver_id))
+        <script>
+            let receiver_id = "{{ $receiver_id }}";
+            let sender_id = "{{ Auth::user()->id }}";
+            let sender_role = "{{ Auth::user()->role }}";
 
-        if (sender_role == 'tourist') {
-            channel_name = 'chat-' + sender_id + '-' + receiver_id;
-        } else {
-            channel_name = 'chat-' + receiver_id + '-' + sender_id;
-        }
+            if (sender_role == 'tourist') {
+                channel_name = 'chat-' + sender_id + '-' + receiver_id;
+            } else {
+                channel_name = 'chat-' + receiver_id + '-' + sender_id;
+            }
 
-        var pusher = new Pusher('c4511fa24aeddfc52ef2', {
-            cluster: 'ap2'
-        });
+            var pusher = new Pusher('c4511fa24aeddfc52ef2', {
+                cluster: 'ap2'
+            });
 
-        console.log(channel_name);
+            console.log(channel_name);
 
-        var channel = pusher.subscribe(channel_name);
-        channel.bind('message', function(data) {
-            newElem = document.createElement('li');
-            newElem.classList.add('chat-message');
-            newElem.innerHTML = `<div class="d-flex overflow-hidden">
+            var channel = pusher.subscribe(channel_name);
+            channel.bind('message', function(data) {
+                newElem = document.createElement('li');
+                newElem.classList.add('chat-message');
+                newElem.innerHTML = `<div class="d-flex overflow-hidden">
                                     <div class="user-avatar flex-shrink-0 me-3">
                                         <div class="avatar avatar-sm">
                                             @if (isset($receiver))
@@ -206,11 +207,12 @@
                                 </div>`;
 
 
-            // Add the message to the chat history list
-            var chatList = document.querySelector('.chat-history');
-            chatList.appendChild(newElem);
-            a = document.querySelector('.chat-history-body');
-            a.scrollTo(0, a.scrollHeight);
-        });
-    </script>
+                // Add the message to the chat history list
+                var chatList = document.querySelector('.chat-history');
+                chatList.appendChild(newElem);
+                a = document.querySelector('.chat-history-body');
+                a.scrollTo(0, a.scrollHeight);
+            });
+        </script>
+    @endif
 @endpush
