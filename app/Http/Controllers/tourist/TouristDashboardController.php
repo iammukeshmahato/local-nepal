@@ -81,7 +81,7 @@ class TouristDashboardController extends Controller
                 ->Where('receiver_id', Auth::user()->id);
         })->orWhere(function ($query) use ($clients) {
             $query->where('sender_id', Auth::user()->id)
-                ->Where('receiver_id', $clients[0]->id);
+                ->Where('receiver_id', $clients[0]->user->id);
         })->get();
 
 
